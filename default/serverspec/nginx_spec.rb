@@ -17,7 +17,6 @@
 
 require 'spec_helper'
 
-
 RSpec.configure do |c|
   c.filter_run_excluding skipOn: backend(Serverspec::Commands::Base).check_os[:family]
 end
@@ -30,10 +29,10 @@ end
 
 # determine all required paths
 nginx_path      = '/etc/nginx'
-nginx_conf      = File.join( nginx_path, 'nginx.conf' )
-nginx_confd     = File.join( nginx_path, 'conf.d' )
-nginx_enabled   = File.join( nginx_path, 'sites-enabled')
-nginx_hardening = File.join( nginx_confd, '90.hardening.conf' )
+nginx_conf      = File.join(nginx_path, 'nginx.conf')
+nginx_confd     = File.join(nginx_path, 'conf.d')
+nginx_enabled   = File.join(nginx_path, 'sites-enabled')
+nginx_hardening = File.join(nginx_confd, '90.hardening.conf')
 
 # check for files
 describe 'nginx default files' do
