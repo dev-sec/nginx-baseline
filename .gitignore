@@ -1,0 +1,6 @@
+**/.librarian
+**/Puppetfile.lock
+**/.tmp
+Gemfile.lock
+Berksfile.lock
+nbproject
