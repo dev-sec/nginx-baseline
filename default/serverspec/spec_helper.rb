@@ -81,3 +81,6 @@ else
     end
   end
 end
+
+# additional requirements
+require 'type/nginx_conf'
