@@ -1,6 +1,8 @@
 
-class { 'nginx': }
+class { 'nginx':
+  package_source => 'system'
+}
 
-class { 'nginx_hardening':
-  provider => 'jfryman/nginx'
+class { 'nginx_hardening::jfryman':
+  package_source => 'system'
 }
