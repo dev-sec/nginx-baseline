@@ -1,4 +1,6 @@
 
 class { 'nginx': }
 
-class { 'nginx_hardening':}
+class { 'nginx_hardening':
+  provider => 'jfryman/nginx'
+}
