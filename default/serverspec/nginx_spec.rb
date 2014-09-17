@@ -67,6 +67,13 @@ describe 'nginx default files' do
   end
 end
 
+
+describe 'Check for multiple instances' do
+  describe command('ps aux | egrep "nginx: master" | egrep -v "grep" | wc -l') do
+    its(:stdout) { should match(/^1$/) }
+  end
+end
+
 # check configuration parameters
 describe 'check nginx configuration' do
 
