@@ -163,5 +163,4 @@ describe 'check nginx configuration' do
   describe nginx_conf(conf_paths) do
     its(:content) { should match(/^\s*add_header X-XSS-Protection "1; mode=block";$/) }
   end
-
 end
