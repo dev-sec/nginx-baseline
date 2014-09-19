@@ -5,10 +5,12 @@ module Serverspec
       def initialize(paths)
         @paths = paths
       end
+
       def content
         @paths.map { |x| ::File.read x }.join("\n")
       end
     end
+
     def nginx_conf(paths)
       NginxConf.new(paths)
     end
