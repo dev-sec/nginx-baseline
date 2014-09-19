@@ -63,7 +63,7 @@ describe 'nginx default files' do
   conf_paths.each do |conf_path|
     describe file(conf_path) do
       it { should be_file }
-    endM
+    end
   end
 end
 
