@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module Serverspec
   module Type
-     
+
     class NginxConf < Base
   
       def initialize(paths)
@@ -9,9 +9,8 @@ module Serverspec
       end
      
       def content
-        @paths.map{|x| ::File.read x }.join("\n")
+        @paths.map{ |x| ::File.read x }.join("\n")
       end
-
     end
 
     def nginx_conf(paths)
