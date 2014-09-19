@@ -33,7 +33,7 @@ nginx_conf      = File.join(nginx_path, 'nginx.conf')
 nginx_confd     = File.join(nginx_path, 'conf.d')
 nginx_enabled   = File.join(nginx_path, 'sites-enabled')
 nginx_hardening = File.join(nginx_confd, '90.hardening.conf')
-conf_paths      = [ nginx_conf, nginx_hardening ]
+conf_paths      = [nginx_conf, nginx_hardening]
 
 # check for files
 describe 'nginx core configuration' do
@@ -63,7 +63,7 @@ describe 'nginx default files' do
   conf_paths.each do |conf_path|
     describe file(conf_path) do
       it { should be_file }
-    end
+    endM
   end
 end
 
