@@ -33,7 +33,7 @@ nginx_conf      = File.join(nginx_path, 'nginx.conf')
 nginx_confd     = File.join(nginx_path, 'conf.d')
 nginx_enabled   = File.join(nginx_path, 'sites-enabled')
 nginx_hardening = File.join(nginx_confd, '90.hardening.conf')
-conf_paths      = [ nginx_conf, nginx_hardening ]
+conf_paths      = [nginx_conf, nginx_hardening]
 
 # check for files
 describe 'nginx core configuration' do
@@ -163,5 +163,4 @@ describe 'check nginx configuration' do
   describe nginx_conf(conf_paths) do
     its(:content) { should match(/^\s*add_header X-XSS-Protection "1; mode=block";$/) }
   end
-
 end
