@@ -22,9 +22,7 @@ if ENV['STANDALONE_SPEC']
   require 'net/ssh'
   require 'highline/import'
 
-  include Serverspec::Helper::Ssh
-  include Serverspec::Helper::Exec
-  include Serverspec::Helper::DetectOS
+  set :backend, :ssh
 
   RSpec.configure do |c|
 
@@ -43,44 +41,23 @@ if ENV['STANDALONE_SPEC']
     end
 
     if ENV['ASK_LOGIN_USERNAME']
-      user = ask("\nEnter login username: ") { |q| q.echo = false }
+      options[:user] = ask("\nEnter login username: ") { |q| q.echo = false }
     else
-      user = ENV['LOGIN_USERNAME'] || ENV['user'] || Etc.getlogin
+      options[:user] = ENV['LOGIN_USERNAME'] || ENV['user'] || Etc.getlogin
     end
 
-    if user.nil?
+    if options[:user].nil?
       puts 'specify login user env LOGIN_USERNAME= or user='
       exit 1
     end
 
-    # @see https://github.com/serverspec/serverspec/issues/267
-    ENV['LANG'] = 'C'
-    options[:send_env] = options[:send_env] | [/^LANG$/]
-
-    c.host  = ENV['TARGET_HOST']
-    options.merge(Net::SSH::Config.for(c.host))
-    c.ssh   = Net::SSH.start(c.host, user, options)
-    c.os    = backend.check_os
+    c.host = ENV['TARGET_HOST']
+    c.ssh_options = options.merge(Net::SSH::Config.for(c.host))
 
   end
 
 else
   require 'serverspec'
-  require 'pathname'
 
-  include Serverspec::Helper::Exec
-  include Serverspec::Helper::DetectOS
-
-  RSpec.configure do |c|
-
-    # @see https://github.com/serverspec/serverspec/issues/267
-    ENV['LANG'] = 'C'
-
-    c.before :all do
-      c.os = backend(Serverspec::Commands::Base).check_os
-    end
-  end
+  set :backend, :exec
 end
-
-# additional requirements
-require 'type/nginx_conf'
