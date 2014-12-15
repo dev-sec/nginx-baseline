@@ -61,3 +61,5 @@ else
 
   set :backend, :exec
 end
+
+require 'type/nginx_conf'
