@@ -17,10 +17,6 @@
 
 require 'spec_helper'
 
-RSpec.configure do |c|
-  c.filter_run_excluding skipOn: backend(Serverspec::Commands::Base).check_os[:family]
-end
-
 RSpec::Matchers.define :match_key_value do |key, value|
   match do |actual|
     actual =~ /^\s*?#{key}\s*?=\s*?#{value}/
