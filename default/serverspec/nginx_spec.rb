@@ -74,32 +74,32 @@ end
 describe 'check nginx configuration' do
 
   
-  describe file(nginx_conf) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should_not match(/^\s*user root;$/) }
   end
 
   
-  describe file(nginx_conf) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should_not match(/^\s*group root;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*server_tokens off;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*client_body_buffer_size 1k;$/) }
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+    its(:content) { should match(/^\s*client_body_buffer_size\s*1k;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*client_max_body_size 1k;$/) }
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+    its(:content) { should match(/^\s*client_max_body_size\s*1k;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*keepalive_timeout\s+5 5;$/) }
   end
 
@@ -114,49 +114,49 @@ describe 'check nginx configuration' do
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_header_buffer_size 1k;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*large_client_header_buffers 2 1k;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_body_timeout 10;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_header_timeout 10;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*send_timeout 10;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*limit_conn_zone \$binary_remote_addr zone=default:10m;$/) }
   end
 
   
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*limit_conn default 5;$/) }
   end
 
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-Frame-Options SAMEORIGIN;$/) }
   end
 
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-Content-Type-Options nosniff;$/) }
   end
 
-  describe nginx_conf(conf_paths) do
+  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-XSS-Protection "1; mode=block";$/) }
   end
 end
