@@ -103,15 +103,15 @@ describe 'check nginx configuration' do
     its(:content) { should match(/^\s*keepalive_timeout\s+5 5;$/) }
   end
 
-  
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*more_clear_headers 'Server';$/) }
-  end
+  # 
+  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+  #   its(:content) { should match(/^\s*more_clear_headers 'Server';$/) }
+  # end
 
-  
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*more_clear_headers 'X-Powered-By';$/) }
-  end
+  # 
+  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+  #   its(:content) { should match(/^\s*more_clear_headers 'X-Powered-By';$/) }
+  # end
 
   
   describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
