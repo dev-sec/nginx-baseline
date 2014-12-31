@@ -103,15 +103,15 @@ describe 'check nginx configuration' do
     its(:content) { should match(/^\s*keepalive_timeout\s+5 5;$/) }
   end
 
-  # DTAG SEC: Req. 3.03-16
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*more_clear_headers 'Server';$/) }
-  end
+  # # DTAG SEC: Req. 3.03-16
+  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+  #   its(:content) { should match(/^\s*more_clear_headers 'Server';$/) }
+  # end
 
-  # DTAG SEC: Req. 3.03-16
-  describe nginx_conf(conf_paths) do
-    its(:content) { should match(/^\s*more_clear_headers 'X-Powered-By';$/) }
-  end
+  # # DTAG SEC: Req. 3.03-16
+  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
+  #   its(:content) { should match(/^\s*more_clear_headers 'X-Powered-By';$/) }
+  # end
 
   # DTAG SEC: Req. 3.01-9
   describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
