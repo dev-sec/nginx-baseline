@@ -62,4 +62,4 @@ else
   set :backend, :exec
 end
 
-require 'type/nginx_conf'
+require 'type/file_with_includes'
