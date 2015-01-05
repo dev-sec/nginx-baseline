@@ -10,6 +10,7 @@
     "run_list": [
         "recipe[chef-solo-search]",
         "recipe[apt]",
+        "recipe[nginx-hardening::upgrades]",
         "recipe[nginx]",
         "recipe[nginx-hardening]"
     ]
