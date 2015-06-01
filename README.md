@@ -3,8 +3,8 @@ tests-nginx-hardening
 
 This are the integration tests for the projects
 
-- https://github.com/TelekomLabs/puppet-nginx-hardening
-- https://github.com/TelekomLabs/chef-nginx-hardening
+- https://github.com/hardening-io/puppet-nginx-hardening
+- https://github.com/hardening-io/chef-nginx-hardening
 
 they start at `integration` level
 
