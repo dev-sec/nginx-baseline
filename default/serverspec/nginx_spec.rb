@@ -63,7 +63,6 @@ describe 'nginx default files' do
   end
 end
 
-
 describe 'Check for multiple instances' do
   describe command('ps aux | egrep "nginx: master" | egrep -v "grep" | wc -l') do
     its(:stdout) { should match(/^1$/) }
@@ -73,90 +72,22 @@ end
 # check configuration parameters
 describe 'check nginx configuration' do
 
-  
   describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should_not match(/^\s*user root;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should_not match(/^\s*group root;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*server_tokens off;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_body_buffer_size\s*1k;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_max_body_size\s*1k;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*keepalive_timeout\s+5 5;$/) }
-  end
-
-  # 
-  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
-  #   its(:content) { should match(/^\s*more_clear_headers 'Server';$/) }
-  # end
-
-  # 
-  # describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
-  #   its(:content) { should match(/^\s*more_clear_headers 'X-Powered-By';$/) }
-  # end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_header_buffer_size 1k;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*large_client_header_buffers 2 1k;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_body_timeout 10;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*client_header_timeout 10;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*send_timeout 10;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*limit_conn_zone \$binary_remote_addr zone=default:10m;$/) }
-  end
-
-  
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*limit_conn default 5;$/) }
-  end
-
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-Frame-Options SAMEORIGIN;$/) }
-  end
-
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-Content-Type-Options nosniff;$/) }
-  end
-
-  describe file_with_includes(nginx_conf, /^\s*include.*;\s*$/) do
     its(:content) { should match(/^\s*add_header X-XSS-Protection "1; mode=block";$/) }
   end
 end
