@@ -1,0 +1,10 @@
+name: nginx-hardening
+title: Hardening Framework NGINX Hardening Test Suite
+maintainer: Hardening Framework Team
+copyright: Hardening Framework Team
+copyright_email: hello@hardening.io
+license: Apache 2 license
+summary: Test-suite for best-practice nginx hardening
+version: 0.9.0
+supports:
+  - os-family: unix

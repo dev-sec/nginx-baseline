@@ -1,5 +1,10 @@
+---
+language: ruby
+cache: bundler
 rvm:
   - 1.9.3
-  - 2.0.0
-language: ruby
-script: bundle exec rake run_all_linters
+  - 2.0
+  - 2.2
+
+bundler_args: --without integration
+script: bundle exec rake
