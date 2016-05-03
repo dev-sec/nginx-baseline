@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# Copyright 2016, Patrick Münch
+# Copyright 2016, Patrick Muench
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,5 +38,4 @@ class Nginxlib < Inspec.resource(1) # rubocop:disable Metrics/ClassLength
 
     web_user
   end
-
 end

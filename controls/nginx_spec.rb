@@ -38,7 +38,7 @@ options = {
 
 options_add_header = {
   assignment_re: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-   multiple_values: true
+  multiple_values: true
 }
 
 control 'nginx-01' do
