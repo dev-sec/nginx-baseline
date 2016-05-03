@@ -18,7 +18,7 @@
 # author: Dominik Richter
 # author: Patrick Muench
 
-class Nginxlib < Inspec.resource(1) # rubocop:disable Metrics/ClassLength
+class Nginxlib < Inspec.resource(1)
   name 'nginx_lib'
 
   def valid_users
