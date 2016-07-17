@@ -109,7 +109,7 @@ end
 
 control 'nginx-06' do
   impact 1.0
-  title 'Prevent buffer ocerflow attacks'
+  title 'Prevent buffer overflow attacks'
   desc 'Buffer overflow attacks are made possible by writing data to a buffer and exceeding that buffer boundary and overwriting memory fragments of a process. To prevent this in nginx we can set buffer size limitations for all clients.'
   describe parse_config_file(nginx_conf, options) do
     its('client_body_buffer_size') { should eq '1k' }
