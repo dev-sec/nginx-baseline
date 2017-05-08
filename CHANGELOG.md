@@ -1,6 +1,14 @@
 # Change Log
 
-## [2.0.1](https://github.com/dev-sec/nginx-baseline/tree/2.0.1) (2016-12-21)
+## [2.0.2](https://github.com/dev-sec/nginx-baseline/tree/2.0.2) (2017-05-08)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.0.1...2.0.2)
+
+**Merged pull requests:**
+
+- update metadata [\#16](https://github.com/dev-sec/nginx-baseline/pull/16) ([chris-rock](https://github.com/chris-rock))
+- restrict ruby testing to version 2.3.3 and update gemfile [\#15](https://github.com/dev-sec/nginx-baseline/pull/15) ([atomic111](https://github.com/atomic111))
+
+## [2.0.1](https://github.com/dev-sec/nginx-baseline/tree/2.0.1) (2016-12-22)
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.0.0...2.0.1)
 
 **Closed issues:**
@@ -9,6 +17,7 @@
 
 **Merged pull requests:**
 
+- readme update, change log & tooling [\#14](https://github.com/dev-sec/nginx-baseline/pull/14) ([chris-rock](https://github.com/chris-rock))
 - fix typo [\#11](https://github.com/dev-sec/nginx-baseline/pull/11) ([rndmh3ro](https://github.com/rndmh3ro))
 
 ## [2.0.0](https://github.com/dev-sec/nginx-baseline/tree/2.0.0) (2016-05-03)
