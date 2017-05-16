@@ -33,11 +33,11 @@ nginx_hardening = File.join(nginx_confd, '90.hardening.conf')
 conf_paths      = [nginx_conf, nginx_hardening]
 
 options = {
-  assignment_re: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
 }
 
 options_add_header = {
-  assignment_re: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
   multiple_values: true
 }
 
