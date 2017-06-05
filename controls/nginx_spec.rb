@@ -41,7 +41,7 @@ options_add_header = {
   multiple_values: true
 }
 
-control 'test_nginx-01' do
+control 'nginx-01' do
   impact 1.0
   title 'Running worker process as non-privileged user'
   desc 'The NGINX worker processes should run as non-privileged user. In case of compromise of the process, an attacker has full access to the system.'
