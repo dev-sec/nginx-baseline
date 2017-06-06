@@ -27,7 +27,7 @@ The versions of the software in these cases may not match the above mentioned ve
 # START_DESCRIBE V-2246
     version = package('nginx').version.split('-')[0]
     describe version do
-        it{should cmp >= '1.12.0' }
+        it{should cmp >= '1.13.0' }
     end
 # STOP_DESCRIBE V-2246
 
