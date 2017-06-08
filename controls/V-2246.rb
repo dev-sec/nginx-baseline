@@ -22,6 +22,17 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
+MIN_NGINX_VER = attribute(
+  'pg_dba',
+  description: 'Minimum Web vendor-supported version.',
+  default: '1.13.0'
+)
+
+only_if do
+  command('nginx').exist?
+end
+
+
 control "V-2246" do   
   title "Web server software must be a vendor-supported version."   
   desc "Many vulnerabilities are associated with older versions of
@@ -59,7 +70,7 @@ control "V-2246" do
 # START_DESCRIBE V-2246
     version = package('nginx').version.split('-')[0]
     describe version do
-        it{should cmp >= '1.13.0' }
+        it{should cmp >= MIN_NGINX_VER }
     end
 # STOP_DESCRIBE V-2246
 end
