@@ -29,7 +29,9 @@ end
 
 
 control "V-2255" do
-  title "The web server’s htpasswd files (if present) must reflect proper ownership and permissions"
+  
+  title "The web server’s htpasswd files (if present) must reflect proper
+  ownership and permissions"
   
   desc "In addition to OS restrictions, access rights to files and directories
   can be set on a web site using the web server software.That is, in addition
