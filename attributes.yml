@@ -6,39 +6,39 @@
 # progromatic deployment or validation of differnt deployment patterns without
 # having to adjust the core profile.
 
-pg_owner: 'postgres'
-pg_owner_password: 'pguser@1234#'
+# pg_owner: 'postgres'
+# pg_owner_password: 'pguser@1234#'
 
-pg_dba: 'stig_dba'
-pg_dba_password: 'stigD@1234#'
+# pg_dba: 'stig_dba'
+# pg_dba_password: 'stigD@1234#'
 
-pg_user: 'stig_user'
-pg_user_password: 'stig@1234#'
+# pg_user: 'stig_user'
+# pg_user_password: 'stig@1234#'
 
-pg_ver: '9.5'
-pg_host: '127.0.0.1'
-pg_port: '5432'
+nginx_ver: '1.13.0'
+# pg_host: '127.0.0.1'
+# pg_port: '5432'
 
-pg_db: 'stig_test_db'
-pg_table: 'stig_test_table'
+# pg_db: 'stig_test_db'
+# pg_table: 'stig_test_table'
 
-# priv user account that can login to the postgres host
-login_user: 'vagrant'
-login_host: '127.0.0.1'
-pg_data_dir: /var/lib/pgsql/9.5/data
-pg_conf_file: /var/lib/pgsql/9.5/data/postgresql.conf
-pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
-pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
+# # priv user account that can login to the postgres host
+# login_user: 'vagrant'
+# login_host: '127.0.0.1'
+# pg_data_dir: /var/lib/pgsql/9.5/data
+# pg_conf_file: /var/lib/pgsql/9.5/data/postgresql.conf
+# pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
+# pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
 
-pg_shared_dirs:
-  ["/usr/pgsql-${pg_ver}",
-  "/usr/pgsql-${pg_ver}/bin",
-  "/usr/pgsql-${pg_ver}/include",
-  "/usr/pgsql-${pg_ver}/lib",
-  "/usr/pgsql-${pg_ver}/share"
-  ]
+# pg_shared_dirs:
+#   ["/usr/pgsql-${pg_ver}",
+#   "/usr/pgsql-${pg_ver}/bin",
+#   "/usr/pgsql-${pg_ver}/include",
+#   "/usr/pgsql-${pg_ver}/lib",
+#   "/usr/pgsql-${pg_ver}/share"
+#   ]
 
-pg_doc_roles:
-  {'postgres'=>'-1',
-  'mitre_dba' => '-1',
-  'mitre => '-1'}
+# pg_doc_roles:
+#   {'postgres'=>'-1',
+#   'mitre_dba' => '-1',
+#   'mitre => '-1'}
