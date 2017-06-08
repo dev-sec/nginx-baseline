@@ -22,8 +22,8 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
-MIN_NGINX_VER = attribute(
-  'pg_dba',
+NGINX_VER = attribute(
+  'nginx_ver',
   description: 'Minimum Web vendor-supported version.',
   default: '1.13.0'
 )
@@ -68,9 +68,9 @@ control "V-2246" do
   maintain appropriate service packs and patches."
 
 # START_DESCRIBE V-2246
-    version = package('nginx').version.split('-')[0]
+    version = package('nginx').version.to_s.split('-')[0]
     describe version do
-        it{should cmp >= MIN_NGINX_VER }
+        it{should cmp >= NGINX_VER }
     end
 # STOP_DESCRIBE V-2246
 end
