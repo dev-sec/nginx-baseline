@@ -106,10 +106,6 @@ control "V-2256" do
   site that must execute the directives in .htacces." 
 
 # START_DESCRIBE V-2256
-  # describe file(NGINX_CONF_FILE) do
-  #   its('mode') { should cmp <= 600 }
-  # end
-
 
   access_control_files.each do |file|
     file_path = command("find / -name #{file}").stdout.chomp
