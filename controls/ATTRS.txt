@@ -1,0 +1,3 @@
+ATTRS
+
+MIN_NGINX_VER :  V-2246

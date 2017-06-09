@@ -22,8 +22,8 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
-NGINX_VER = attribute(
-  'nginx_ver',
+NGINX_MIN_VER = attribute(
+  'nginx_min_ver',
   description: 'Minimum Web vendor-supported version.',
   default: '1.13.0'
 )
@@ -70,7 +70,7 @@ control "V-2246" do
 # START_DESCRIBE V-2246
     version = package('nginx').version.to_s.split('-')[0]
     describe version do
-        it{should cmp >= NGINX_VER }
+        it{should cmp >= NGINX_MIN_VER }
     end
 # STOP_DESCRIBE V-2246
 end

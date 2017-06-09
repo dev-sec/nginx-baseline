@@ -6,16 +6,19 @@
 # progromatic deployment or validation of differnt deployment patterns without
 # having to adjust the core profile.
 
-web_manager: 'nginx_web_manager'
+# === DO NOT EDIT ===
+
+nginx_owner: 'nginx'
+nginx_group: 'nginx'
 web_manager_password: 'nginx@1234#'
 
-sys_admin: 'nginx_sys_admin'
-sys_admin_password: 'sysadmin@1234#'
+sys_admin: 'root'
+sys_admin_group: 'root'
 
 # pg_user: 'stig_user'
 # pg_user_password: 'stig@1234#'
 
-nginx_ver: '1.13.0'
+nginx_min_ver: '1.13.0'
 # pg_host: '127.0.0.1'
 # pg_port: '5432'
 
@@ -26,7 +29,7 @@ nginx_ver: '1.13.0'
 # login_user: 'vagrant'
 # login_host: '127.0.0.1'
 # pg_data_dir: /var/lib/pgsql/9.5/data
-nginx_conf_file: /etc/nginx/nginx.conf
+nginx_conf_file: '/etc/nginx/nginx.conf'
 # pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
 # pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
 
@@ -45,6 +48,13 @@ nginx_conf_file: /etc/nginx/nginx.conf
 
 # V-13621 All web server documentation, sample code, example applications, and
 # tutorials must be removed from a production web server.
-nginx_V13621_file_list :
-  ["/usr/share/man/man8/nginx.8.gz"
+
+# === PROFILE USER EDIT ===
+
+nginx_disallowed_file_list :
+  ['/usr/share/man/man8/nginx.8.gz']
+
+nginx_allowed_file_list: 
+  [
+  ''
   ]
