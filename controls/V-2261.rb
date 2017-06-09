@@ -65,7 +65,7 @@ control "V-2261" do
   end  
 
   describe command("telnet localhost 25") do
-    its('stdout') {should match /Connection refusmehed/} #need fixing
+    its('stdout') {should match /Connection refused/} #need fixing
   end 
 # STOP_DESCRIBE V-2261
 
