@@ -22,6 +22,25 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
+
+NGINX_PROCESSID_FILE = attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx process ID file',
+  default: "/run/nginx.pid"
+)
+
+SYS_ADMIN = attribute(
+  'sys_admin',
+  description: 'System Admin owner',
+  default: 'root'
+  )
+
+SYS_ADMIN_GROUP = attribute(
+  'sys_admin_group',
+  description: 'System Admin group',
+  default: 'root'
+  )
+
 control "V-26305" do
   title "The process ID (PID) file must be properly secured."
   
@@ -54,6 +73,13 @@ control "V-26305" do
   file folder. "
 
   # START_DESCRIBE V-26305
+  describe file(NGINX_PROCESSID_FILE) do
+    it { should exist }
+    it { should be_owned_by SYS_ADMIN }
+    it { should be_grouped_into SYS_ADMIN_GROUP }
+    its('mode') { should cmp '640' }
+  end
+
   # STOP_DESCRIBE V-26305
 
 end
