@@ -53,6 +53,9 @@ control "V-26294" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26294
+  describe command('nginx -V 2>&1') do
+    its('stdout') {should_not match 'http_status_module'}
+  end
   # STOP_DESCRIBE V-26294
 
 end
