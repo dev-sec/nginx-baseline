@@ -22,6 +22,21 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
+
+
+NGINX_AUTHORIZED_MODULES= attribute(
+  'nginx_authorized_modules',
+  description: 'List of  authorized nginx modules.',
+  default: [  
+           ]
+)
+NGINX_UNAUTHORIZED_MODULES= attribute(
+  'nginx_unauthorized_modules',
+  description: 'List of  unauthorized nginx modules.',
+  default: [  
+           ]
+)
+
 control "V-26285" do
   title "Active software modules must be minimized."
   
@@ -60,6 +75,19 @@ control "V-26285" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26285
+    loaded_modules = command('nginx -V 2>&1').stdout.to_s.scan(/--with-(\S+)_module/).flatten
+
+    loaded_modules.each do |_module|
+      describe NGINX_AUTHORIZED_MODULES do
+        it {should include _module}
+      end
+    end
+
+    loaded_modules.each do |_module|
+      describe NGINX_UNAUTHORIZED_MODULES do
+        it {should_not include _module}
+      end
+    end
   # STOP_DESCRIBE V-26285
 
 end

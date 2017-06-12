@@ -30,6 +30,9 @@ nginx_min_ver: '1.13.0'
 # login_host: '127.0.0.1'
 # pg_data_dir: /var/lib/pgsql/9.5/data
 nginx_conf_file: '/etc/nginx/nginx.conf'
+nginx_hardening_file: '/etc/nginx/conf.d/90.hardening.conf'
+
+
 # pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
 # pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
 
@@ -58,3 +61,8 @@ nginx_allowed_file_list:
   [
   ''
   ]
+nginx_authorized_modules :
+  [  
+  ''
+  ]
+
