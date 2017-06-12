@@ -22,6 +22,24 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
+
+NGINX_HARDENING_FILE = attribute(
+  'nginx_hardening_file',
+  description: 'Path to the nginx hardening file',
+  default: "/etc/nginx/conf.d/90.hardening.conf"
+)
+
+
+options = {
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
+}
+
+
+only_if do
+  command('nginx').exist?
+end
+
+
 control "V-13738" do
   title "The HTTP request header field size must be limited."
   
@@ -54,5 +72,8 @@ control "V-13738" do
   to 1k or less." 
 
   # START_DESCRIBE V-13738
+  describe parse_config_file(NGINX_HARDENING_FILE, options) do
+    its('client_header_buffer_size') { should eq '1k' }
+  end
   # STOP_DESCRIBE V-13738
 end
