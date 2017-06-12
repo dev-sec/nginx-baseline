@@ -39,7 +39,7 @@ control "V-26285" do
   tag "gid": "V-26285"
   tag "rid": "SV-33215r1_rule"
   tag "stig_id": "WA00500 A22"
-  tag "nist": ["CM-6", "Rev_4"]
+  tag "nist": ["CM-2", "Rev_4"]
   
   tag "check": "Enter the following command:
 
