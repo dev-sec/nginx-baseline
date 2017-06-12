@@ -61,5 +61,8 @@ control "V-26299" do
 
 
   # START_DESCRIBE V-26299
+  describe command('nginx -V 2>&1') do
+    its('stdout') {should_not match 'http_proxy_module'}
+  end
   # STOP_DESCRIBE V-26299
 end
