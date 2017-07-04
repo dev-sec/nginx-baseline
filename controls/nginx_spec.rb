@@ -234,8 +234,8 @@ end
 
 control 'nginx-15' do
   impact 1.0
-  title 'Disable content-type sniffing'
-  desc 'It prevents browser from trying to mime-sniff the content-type of a response away from the one being declared by the server. It reduces exposure to drive-by downloads and the risks of user uploaded content that, with clever naming, could be treated as a different content-type, like an executable.'
+  title 'Content-Security-Policy'
+  desc 'The Content-Security-Policy HTTP response header helps you reduce XSS risks on modern browsers by declaring what dynamic resources are allowed to load via a HTTP Header'
   describe parse_config_file(nginx_hardening, options_add_header) do
     its('content') { should match(/^\s*add_header Content-Security-Policy "script-src 'self'; object-src 'self'";$/) }
   end
