@@ -20,6 +20,13 @@
 
 title 'NGINX server config'
 
+# attributes
+CLIENT_MAX_BODY_SIZE = attribute(
+  'client_max_body_size',
+  description: ' Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size. ',
+  default: '1k'
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -112,7 +119,7 @@ control 'nginx-06' do
   title 'Prevent buffer overflow attacks'
   desc 'Buffer overflow attacks are made possible by writing data to a buffer and exceeding that buffer boundary and overwriting memory fragments of a process. To prevent this in nginx we can set buffer size limitations for all clients.'
   describe parse_config_file(nginx_conf, options) do
-    its('client_body_buffer_size') { should eq '1k' }
+    its('client_body_buffer_size') { should eq CLIENT_MAX_BODY_SIZE }
   end
   describe parse_config_file(nginx_conf, options) do
     its('client_max_body_size') { should eq '1k' }
@@ -196,13 +203,13 @@ control 'nginx-12' do
   title 'TLS Protocols'
   desc 'When choosing a cipher during an SSLv3 or TLSv1 handshake, normally the client\'s preference is used. If this directive is enabled, the server\'s preference will be used instead.'
   ref 'SSL Hardening config', url: 'https://mozilla.github.io/server-side-tls/ssl-config-generator/'
-  describe file(nginx_conf) do
-    its('content') { should match /^\s+ssl_protocols TLSv1.2;$/ }
-    its('content') { should match /^\s+ssl_session_tickets off;$/ }
-    its('content') { should match /^\s+ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';$/ }
-    its('content') { should match /^\s+ssl_prefer_server_ciphers on;$/ }
-    its('content') { should match /^\s+ssl_dhparam \/etc\/nginx\/ssl\/dhparam.pem;$/ }
-    its('content') { should match /^\s+ssl on;$/ }
+  describe file(nginx_hardening) do
+    its('content') { should match(/^\s*ssl_protocols TLSv1.2;$/) }
+    its('content') { should match(/^\s*ssl_session_tickets off;$/) }
+    its('content') { should match(/^\s*ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';$/) }
+    its('content') { should match(/^\s*ssl_prefer_server_ciphers on;$/) }
+    its('content') { should match(%r{^\s*ssl_dhparam /etc/nginx/dh2048.pem;$}) }
+    # its('content') { should match(/^\s*ssl on;$/) }
   end
 end
 
@@ -210,8 +217,8 @@ control 'nginx-13' do
   impact 1.0
   title 'Add HSTS Header'
   desc 'HTTP Strict Transport Security (HSTS) is a web security policy mechanism which helps to protect websites against protocol downgrade attacks and cookie hijacking. It allows web servers to declare that web browsers (or other complying user agents) should only interact with it using secure HTTPS connections, and never via the insecure HTTP protocol. HSTS is an IETF standards track protocol and is specified in RFC 6797.'
-  describe file(nginx_conf) do
-    its('content') { should match /^\s+add_header Strict-Transport-Security max-age=15768000;$/ }
+  describe file(nginx_hardening) do
+    its('content') { should match(/^\s*add_header Strict-Transport-Security max-age=15768000;$/) }
   end
 end
 
@@ -221,7 +228,7 @@ control 'nginx-14' do
   desc 'Disable insecure HTTP-methods and allow only necessary methods.'
 
   describe file(nginx_conf) do
-    its('content') { should match /^\s+if ($request_method !~ ^(GET|HEAD|POST)$ )$/ }
+    its('content') { should match(/^\s+if ($request_method !~ ^(GET|HEAD|POST)$ )$/) }
   end
 end
 
@@ -230,7 +237,7 @@ control 'nginx-15' do
   title 'Disable content-type sniffing'
   desc 'It prevents browser from trying to mime-sniff the content-type of a response away from the one being declared by the server. It reduces exposure to drive-by downloads and the risks of user uploaded content that, with clever naming, could be treated as a different content-type, like an executable.'
   describe parse_config_file(nginx_hardening, options_add_header) do
-    its('content') { should match /^\s+add_header Header set Content-Security-Policy "script-src 'self'; object-src 'self'";$/ }
+    its('content') { should match(/^\s*add_header Content-Security-Policy "script-src 'self'; object-src 'self'";$/) }
   end
 end
 
@@ -239,6 +246,6 @@ control 'nginx-16' do
   title 'Set cookie with HttpOnly and Secure flag'
   desc 'You can mitigate most of the common Cross Site Scripting attack using HttpOnly and Secure flag in a cookie. Without having HttpOnly and Secure, it is possible to steal or manipulate web application session and cookies and it’s dangerous.'
   describe parse_config_file(nginx_hardening, options_add_header) do
-    its('content') { should match /^\s+set_cookie_flag * HttpOnly secure;$/ }
+    its('content') { should match(/^\s*set_cookie_flag * HttpOnly secure;$/) }
   end
 end
