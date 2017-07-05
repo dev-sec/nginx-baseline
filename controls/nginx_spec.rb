@@ -39,6 +39,42 @@ CLIENT_HEADER_BUFFER_SIZE = attribute(
   default: '1k'
 )
 
+LARGE_CLIENT_HEADER_BUFFER = attribute(
+  'large_client_header_buffers',
+  description: 'Sets the maximum number and size of buffers used for reading large client request header. A request line cannot exceed the size of one buffer, or the 414 (Request-URI Too Large) error is returned to the client. A request header field cannot exceed the size of one buffer as well, or the 400 (Bad Request) error is returned to the client. Buffers are allocated only on demand. By default, the buffer size is equal to 8K bytes. If after the end of request processing a connection is transitioned into the keep-alive state, these buffers are released.',
+  default: '2 1k'
+)
+
+KEEPALIVE_TIMEOUT = attribute(
+  'keepalive_timeout',
+  description: 'The first parameter sets a timeout during which a keep-alive client connection will stay open on the server side. The zero value disables keep-alive client connections. The optional second parameter sets a value in the “Keep-Alive: timeout=time” response header field. Two parameters may differ.',
+  default: '5 5'
+)
+
+CLIENT_BODY_TIMEOUT = attribute(
+  'client_body_timeout',
+  description: 'Defines a timeout for reading client request body. The timeout is set only for a period between two successive read operations, not for the transmission of the whole request body. If a client does not transmit anything within this time, the 408 (Request Time-out) error is returned to the client.',
+  default: '10'
+)
+
+CLIENT_HEADER_TIMEOUT = attribute(
+  'client_header_timeout',
+  description: 'Defines a timeout for reading client request header. If a client does not transmit the entire header within this time, the 408 (Request Time-out) error is returned to the client.',
+  default: '10'
+)
+
+SEND_TIMEOUT = attribute(
+  'send_timeout',
+  description: 'Sets a timeout for transmitting a response to the client. The timeout is set only between two successive write operations, not for the transmission of the whole response. If the client does not receive anything within this time, the connection is closed.',
+  default: '10'
+)
+
+HTTP_METHODS = attribute(
+  'http_methods',
+  description: 'Specify the used HTTP methods',
+  default: 'GET\|HEAD\|POST'
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -140,7 +176,7 @@ control 'nginx-06' do
     its('client_header_buffer_size') { should eq CLIENT_HEADER_BUFFER_SIZE }
   end
   describe parse_config_file(nginx_hardening, options) do
-    its('large_client_header_buffers') { should eq '2 1k' }
+    its('large_client_header_buffers') { should eq LARGE_CLIENT_HEADER_BUFFER }
   end
 end
 
@@ -149,16 +185,16 @@ control 'nginx-07' do
   title 'Control timeouts to improve performance'
   desc 'Control timeouts to improve server performance and cut clients.'
   describe parse_config_file(nginx_conf, options) do
-    its('keepalive_timeout') { should eq '5 5' }
+    its('keepalive_timeout') { should eq KEEPALIVE_TIMEOUT }
   end
   describe parse_config_file(nginx_hardening, options) do
-    its('client_body_timeout') { should eq '10' }
+    its('client_body_timeout') { should eq CLIENT_BODY_TIMEOUT }
   end
   describe parse_config_file(nginx_hardening, options) do
-    its('client_header_timeout') { should eq '10' }
+    its('client_header_timeout') { should eq CLIENT_HEADER_TIMEOUT }
   end
   describe parse_config_file(nginx_hardening, options) do
-    its('send_timeout') { should eq '10' }
+    its('send_timeout') { should eq SEND_TIMEOUT }
   end
 end
 
