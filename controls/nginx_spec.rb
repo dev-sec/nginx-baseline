@@ -274,9 +274,10 @@ control 'nginx-14' do
   impact 1.0
   title 'Disable insecure HTTP-methods'
   desc 'Disable insecure HTTP-methods and allow only necessary methods.'
+  ref 'OWASP HTTP Methods', url: 'https://www.owasp.org/index.php/Test_HTTP_Methods_(OTG-CONFIG-006)'
 
   describe file(nginx_conf) do
-    its('content') { should match(/^\s+if ($request_method !~ ^(GET|HEAD|POST)$ )$/) }
+    its('content') { should match(/^\s*if\s+\(\$request_method\s+\!\~\s+\^\(#{HTTP_METHODS}\)\$\)\{?$/) }
   end
 end
 
