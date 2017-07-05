@@ -23,7 +23,13 @@ title 'NGINX server config'
 # attributes
 CLIENT_MAX_BODY_SIZE = attribute(
   'client_max_body_size',
-  description: ' Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size. ',
+  description: ' Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size.',
+  default: '1k'
+)
+
+CLIENT_BODY_BUFFER_SIZE = attribute(
+  'client_body_buffer_size',
+  description: ' Sets buffer size for reading client request body. In case the request body is larger than the buffer, the whole body or only its part is written to a temporary file. By default, buffer size is equal to two memory pages. This is 8K on x86, other 32-bit platforms, and x86-64. It is usually 16K on other 64-bit platforms.',
   default: '1k'
 )
 
@@ -119,10 +125,10 @@ control 'nginx-06' do
   title 'Prevent buffer overflow attacks'
   desc 'Buffer overflow attacks are made possible by writing data to a buffer and exceeding that buffer boundary and overwriting memory fragments of a process. To prevent this in nginx we can set buffer size limitations for all clients.'
   describe parse_config_file(nginx_conf, options) do
-    its('client_body_buffer_size') { should eq CLIENT_MAX_BODY_SIZE }
+    its('client_body_buffer_size') { should eq CLIENT_BODY_BUFFER_SIZE }
   end
   describe parse_config_file(nginx_conf, options) do
-    its('client_max_body_size') { should eq '1k' }
+    its('client_max_body_size') { should eq CLIENT_MAX_BODY_SIZE }
   end
   describe parse_config_file(nginx_hardening, options) do
     its('client_header_buffer_size') { should eq '1k' }
