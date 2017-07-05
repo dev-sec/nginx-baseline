@@ -23,13 +23,19 @@ title 'NGINX server config'
 # attributes
 CLIENT_MAX_BODY_SIZE = attribute(
   'client_max_body_size',
-  description: ' Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size.',
+  description: 'Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size.',
   default: '1k'
 )
 
 CLIENT_BODY_BUFFER_SIZE = attribute(
   'client_body_buffer_size',
-  description: ' Sets buffer size for reading client request body. In case the request body is larger than the buffer, the whole body or only its part is written to a temporary file. By default, buffer size is equal to two memory pages. This is 8K on x86, other 32-bit platforms, and x86-64. It is usually 16K on other 64-bit platforms.',
+  description: 'Sets buffer size for reading client request body. In case the request body is larger than the buffer, the whole body or only its part is written to a temporary file. By default, buffer size is equal to two memory pages. This is 8K on x86, other 32-bit platforms, and x86-64. It is usually 16K on other 64-bit platforms.',
+  default: '1k'
+)
+
+CLIENT_HEADER_BUFFER_SIZE = attribute(
+  'client_header_buffer_size',
+  description: 'Sets buffer size for reading client request header. For most requests, a buffer of 1K bytes is enough. However, if a request includes long cookies, or comes from a WAP client, it may not fit into 1K. If a request line or a request header field does not fit into this buffer then larger buffers, configured by the large_client_header_buffers directive, are allocated.',
   default: '1k'
 )
 
@@ -131,7 +137,7 @@ control 'nginx-06' do
     its('client_max_body_size') { should eq CLIENT_MAX_BODY_SIZE }
   end
   describe parse_config_file(nginx_hardening, options) do
-    its('client_header_buffer_size') { should eq '1k' }
+    its('client_header_buffer_size') { should eq CLIENT_HEADER_BUFFER_SIZE }
   end
   describe parse_config_file(nginx_hardening, options) do
     its('large_client_header_buffers') { should eq '2 1k' }
