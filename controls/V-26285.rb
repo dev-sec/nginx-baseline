@@ -22,18 +22,28 @@ uri: http://iase.disa.mil
 ----------------- 
 =end 
 
-
-
 NGINX_AUTHORIZED_MODULES= attribute(
   'nginx_authorized_modules',
   description: 'List of  authorized nginx modules.',
   default: [  
+            'http_addition', 
+            'http_auth_request', 
+            'http_dav', 
+            'http_flv', 
+            'http_gunzip', 
+            'http_gzip_static',
            ]
 )
 NGINX_UNAUTHORIZED_MODULES= attribute(
   'nginx_unauthorized_modules',
   description: 'List of  unauthorized nginx modules.',
   default: [  
+            'http_mp4', 
+            'http_random_index', 
+            'http_realip', 
+            'http_secure_link', 
+            'http_slice', 
+            'http_ssl',
            ]
 )
 
@@ -79,13 +89,13 @@ control "V-26285" do
 
     loaded_modules.each do |_module|
       describe NGINX_AUTHORIZED_MODULES do
-        it {should include _module}
+        it {should include(_module)}
       end
     end
 
     loaded_modules.each do |_module|
       describe NGINX_UNAUTHORIZED_MODULES do
-        it {should_not include _module}
+        it {should_not include(_module)}
       end
     end
   # STOP_DESCRIBE V-26285

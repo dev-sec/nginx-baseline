@@ -25,8 +25,8 @@ uri: http://iase.disa.mil
 control "V-26396" do
   title "HTTP request methods must be limited."
   
-  desc "The HTTP 1.1 protocol supports several request methods which are rarely
-  used and potentially high risk. "
+  desc "The HTTP 1.1 protocol supports several request methods which are
+  rarely used and potentially high risk. "
   
   impact 0.5
   tag "severity": "medium"
@@ -41,9 +41,12 @@ control "V-26396" do
 
   For every location (except root), ensure the following entry exists:
 
-  ## Only GET, Post, PUT are allowed##      if ($request_method !~
-  ^(GET|PUT|POST)$ ) {          return 444;      } ## In this case, it does not
-  accept other HTTP methods such as HEAD, DELETE, SEARCH, TRACE ##
+  ## Only GET, Post, PUT are allowed##
+       if ($request_method !~ ^(GET|PUT|POST)$ ) {
+           return 444;
+       }
+  ## In this case, it does not accept other HTTP methods such as HEAD,
+  DELETE, SEARCH, TRACE ##
 
   If the entry is not found for every location, this is a finding."
 
@@ -52,9 +55,13 @@ control "V-26396" do
 
   For every location (except root), edit to add the following entry:
 
-  ## Only GET, Post, PUT are allowed##      if ($request_method !~
-  ^(GET|PUT|POST)$ ) {          return 444;      } ## In this case, it does not
-  accept other HTTP methods such as HEAD, DELETE, SEARCH, TRACE ## "
+  ## Only GET, Post, PUT are allowed##
+       if ($request_method !~ ^(GET|PUT|POST)$ ) {
+           return 444;
+       }
+  ## In this case, it does not accept other HTTP methods such as HEAD, DELETE,
+  SEARCH, TRACE ##
+"
 
   # START_DESCRIBE V-26396
   # STOP_DESCRIBE V-26396

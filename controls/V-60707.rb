@@ -76,8 +76,34 @@ control "V-60707" do
 
   If the entry is not found, this is a finding."
   
-  tag "fix": "Update the cipher specification string for all enabled
-  SSLCipherSuite directives to include !EXPORT."
+  tag "fix": "Review the nginx.conf file and any separate included
+  configuration files.
+
+  Edit to ensure the following entry exists:
+
+  server {
+       # enables server-side protection from BEAST attacks
+       ssl_prefer_server_ciphers on;
+
+     # Disabled insecure ciphers suite. For example, MD5, DES, RC4, PSK
+  ssl_ciphers ""ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-
+  AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-
+  AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256
+  :DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-
+  CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-
+  SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-
+  CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4:@STRENGTH"";
+
+   # -!MEDIUM：exclude encryption cipher suites using 128 bit encryption.
+   # -!LOW：   exclude encryption cipher suites using 64 or 56 bit encryption algorithms 
+   # -!EXPORT： exclude export encryption algorithms including 40 and 56 bits algorithms.
+   # -!aNULL：  exclude the cipher suites offering no authentication. This is currently the anonymous DH algorithms and anonymous ECDH algorithms.   
+          # These cipher suites are vulnerable to a ""man in the middle"" attack and so their use is normally discouraged.
+   # -!eNULL：exclude the ""NULL"" ciphers that is those offering no encryption. 
+          # Because these offer no encryption at all and are a security risk they are disabled unless explicitly included.
+   # @STRENGTH：sort the current cipher list in order of encryption algorithm key length. 
+  }
+  "
 
   # START_DESCRIBE V-60707
   # STOP_DESCRIBE V-60707

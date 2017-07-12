@@ -23,7 +23,9 @@ uri: http://iase.disa.mil
 =end 
 
 control "V-26326" do
-  title "The web server must be configured to listen on a specific IP address and port."
+  
+  title "The web server must be configured to listen on a specific IP address
+  and port."
   
   desc "The nginx listen directive specifies the IP addresses and port numbers
   the nginx web server will listen for requests. Rather than be unrestricted

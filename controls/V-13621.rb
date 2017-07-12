@@ -37,6 +37,17 @@ NGINX_EXCEPTION_FILES= attribute(
            ]
 )
 
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: 'Nginx owner',
+  default: 'nginx'
+  )
+
+NGINX_GROUP = attribute(
+  'nginx_group',
+  description: 'Nginx owner',
+  default: 'nginx'
+  )
 
 
 only_if do

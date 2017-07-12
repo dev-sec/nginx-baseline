@@ -32,6 +32,8 @@ nginx_min_ver: '1.13.0'
 nginx_conf_file: '/etc/nginx/nginx.conf'
 nginx_hardening_file: '/etc/nginx/conf.d/90.hardening.conf'
 
+nginx_processID_file: '/run/nginx.pid'
+
 
 # pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
 # pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
