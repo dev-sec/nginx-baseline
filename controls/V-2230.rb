@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,41 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
+)
+
+NGINX_HOME_DIRECTORY= attribute(
+  'nginx_home_directory',
+  description: 'Path for the nginx document directory',
+  default: "/home"
+)
+
+NGINX_DOCUMENT_DIRECTORY= attribute(
+  'nginx_document_directory',
+  description: 'Path for the nginx home directory',
+  default: "/usr/share/nginx/html"
+)
+
+NGINX_BACKUP_DIRECTORY= attribute(
+  'nginx_backup_directory',
+  description: 'Path for the nginx home directory',
+  default: "/usr/share/nginx/html"
+)
+
+only_if do
+  command('nginx').exist?
+end
 
 control "V-2230" do
 
@@ -62,8 +90,33 @@ control "V-2230" do
   If files with these extensions have no relationship with web activity, such as
   a backup batch file for operating system utility, and they are not accessible
   by the web application, this is not a finding.  "
-  
+
   tag "fix": "Ensure that CGI backup scripts are not left on the production
   web server."
-  
+
+  dirs = [NGINX_HOME_DIRECTORY, NGINX_DOCUMENT_DIRECTORY,NGINX_BACKUP_DIRECTORY]
+
+  dirs.each do |dir|
+    describe command("find #{dir} -name *.bak").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name *.old").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name *.temp").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name *.tmp").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name *.backup").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name .?*").stdout.chomp.split do
+      it {should be_empty}
+    end
+    describe command("find #{dir} -name *~").stdout.chomp.split do
+      it {should be_empty}
+    end
+  end
 end

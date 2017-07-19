@@ -57,27 +57,6 @@ only_if do
   command('nginx').exist?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-options_add_header = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
-}
-
-access_control_files = [ ".htaccess",
-                        ".htpasswd"
-                       ]
-
-system_directories = ['/',
-                      '/etc',
-                      '/bin'
-                     ]
-
-configurable_directories = ['/usr/share/nginx/html'
-                           ]
-
 control "V-2256" do
   title "The access control files are owned by a privileged web server account."
 
@@ -126,6 +105,13 @@ control "V-2256" do
   site that must execute the directives in .htacces."
 
 # START_DESCRIBE V-2256
+
+  access_control_files = [ ".htaccess",
+                          ".htpasswd"]
+  system_directories = ['/',
+                        '/etc',
+                        '/bin']
+  configurable_directories = ['/usr/share/nginx/html']
 
   access_control_files.each do |file|
     file_path = command("find / -name #{file}").stdout.chomp

@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,23 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
+)
+
+only_if do
+  command('nginx').exist?
+end
 
 control "V-2232" do
 
@@ -35,7 +45,7 @@ control "V-2232" do
   unscheduled interruption.If the password is not entrusted to an SA or web
   manager the ability to ensure the availability of the web server is
   compromised."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WG050"
@@ -57,8 +67,12 @@ control "V-2232" do
   NOTE: For installations that run as a service, or without a password, the SA
   or Web Manager having an Admin account on the system would meet the intent of
   this check. "
-  
+
   tag "fix": "Ensure the SA or Web Manager are entrusted with the web
   service(s) password."
+
+  describe passwd.users(NGINX_OWNER).passwords do
+    it { should_not cmp ''}
+  end
 
 end

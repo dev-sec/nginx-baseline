@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,19 +14,35 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+SYS_ADMIN = attribute(
+  'sys_admin',
+  description: "The system adminstrator",
+  default: 'root'
+)
+
+AUTHORIZED_USER_LIST= attribute(
+  'authorized_user_list',
+  description: 'List of privileged accounts',
+  default: [SYS_ADMIN]
+)
+
+only_if do
+  command('nginx').exist?
+end
 
 control "V-2247" do
-  
+
   title "Administrators must be the only users allowed access to the directory
   tree, the shell, or other operating system functions and utilities."
-  
+
   desc "As a rule, accounts on a web server are to be kept to a minimum. Only
   administrators, web managers, developers, auditors, and web authors require
   accounts on the machine hosting the web server. This is in addition to the
@@ -36,7 +52,7 @@ control "V-2247" do
   associated staff require access and control of the web content and web
   server configuration files. The anonymous web user account must not have
   access to system resources as that account could then control the server."
-  
+
   impact 0.7
   tag "severity": "high"
   tag "gtitle": "WG200"
@@ -44,7 +60,7 @@ control "V-2247" do
   tag "rid": "SV-36456r2_rule"
   tag "stig_id": "WG200 A22"
   tag "nist": ["AC-6", "Rev_4"]
-  
+
   tag "check": "Obtain a list of the user accounts for the system, noting the
   priviledges for each account.
 
@@ -63,5 +79,11 @@ control "V-2247" do
   tag "fix": "Ensure non-administrators are not allowed access to the
   directory tree, the shell, or other operating system functions and
   utilities."
+
+  passwd.shells(/bash/).users.each do |account|
+    describe account do
+      it { should be_in AUTHORIZED_USER_LIST}
+    end
+  end
 
 end
