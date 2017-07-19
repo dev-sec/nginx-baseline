@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 
 NGINX_CONF_FILE= attribute(
@@ -32,10 +32,6 @@ NGINX_CONF_FILE= attribute(
 only_if do
   command('nginx').exist?
 end
-
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
 
 control "V-13724" do
   title "The client body and header timeout directives must be properly set."
@@ -56,7 +52,7 @@ control "V-13724" do
   client_header_timeout defines a timeout for reading client request header. If
   a client does not transmit the entire header within this time, the 408
   (Request Time-out) error is returned to the client. "
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA000-WWA020"
@@ -64,7 +60,7 @@ control "V-13724" do
   tag "rid": "SV-32977r1_rule"
   tag "stig_id": "WA000-WWA020 A22"
   tag "nist": ["CM-6", "Rev_4"]
-  
+
   tag "check": "To view the timeout values enter the following commands:
 
   grep ""client_body_timeout"" on the nginx.conf file and any separate included
@@ -84,11 +80,16 @@ control "V-13724" do
 
   client_header_timeout 10s;"
 
-  describe parse_config_file(NGINX_CONF_FILE, options) do
-    its('client_body_timeout') { should eq '10' }
-  end
-  describe parse_config_file(NGINX_CONF_FILE, options) do
-    its('client_header_timeout') { should eq '10' }
+  # START_DESCRIBE V-13724
+
+  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+    describe http['client_body_timeout'].flatten.first do
+      it { should cmp <= '10' }
+    end
+    describe http['client_header_timeout'].flatten.first do
+      it { should cmp <= '10' }
+    end
   end
 
+  # STOP_DESCRIBE V-13724
 end

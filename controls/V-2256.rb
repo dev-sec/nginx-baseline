@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 NGINX_CONF_FILE= attribute(
   'nginx_conf_file',
@@ -28,16 +28,28 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
-WEB_MANAGER = attribute(
-  'web_manager',
-  description: "The web manager",
-  default: 'nginx_web_manager'
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
 )
 
 SYS_ADMIN = attribute(
   'sys_admin',
   description: "The system adminstrator",
-  default: 'nginx_sys_admin'
+  default: 'root'
+)
+
+NGINX_GROUP = attribute(
+  'nginx_group',
+  description: "The Nginx group",
+  default: 'nginx'
+)
+
+SYS_ADMIN_GROUP = attribute(
+  'sys_admin_group',
+  description: "The system adminstrator group",
+  default: 'root'
 )
 
 
@@ -54,13 +66,21 @@ options_add_header = {
   multiple_values: true
 }
 
-access_control_files= [ ".htaccess",
+access_control_files = [ ".htaccess",
                         ".htpasswd"
-                      ]
+                       ]
+
+system_directories = ['/',
+                      '/etc',
+                      '/bin'
+                     ]
+
+configurable_directories = ['/usr/share/nginx/html'
+                           ]
 
 control "V-2256" do
   title "The access control files are owned by a privileged web server account."
-  
+
   desc " This check verifies that the key web server system configuration files
   are owned by the SA or Web Manager controlled account. These same files
   which control the configuration of the web server, and thus its behavior,
@@ -68,7 +88,7 @@ control "V-2256" do
   files are altered by a malicious user, the web server would no longer be
   under the control of its managers and owners; properties in the web server
   configuration could be altered to compromise the entire server platform."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WG280"
@@ -76,7 +96,7 @@ control "V-2256" do
   tag "rid": "SV-6880r1_rule"
   tag "stig_id": "WG280"
   tag "nist": ["AC-3", "Rev_4"]
-  
+
   tag "check": "This check verifies that the SA or Web Manager controlled
   account owns the key web server files. These same files, which control the
   configuration of the web server, and thus its behavior, must also be
@@ -99,11 +119,11 @@ control "V-2256" do
 
   If root or an authorized user does not own the web system files and the
   permission are not correct, this is a finding."
-  
+
   tag "fix": "The site needs to ensure that the owner should be the non-
   privileged web server account or equivalent which runs the web service;
   however, the group permissions represent those of the user accessing the web
-  site that must execute the directives in .htacces." 
+  site that must execute the directives in .htacces."
 
 # START_DESCRIBE V-2256
 
@@ -112,30 +132,56 @@ control "V-2256" do
     unless file_path.to_s.empty?
       describe.one do
         describe file(file_path) do
-          it { should be_owned_by WEB_MANAGER }
+          it { should be_owned_by NGINX_OWNER }
+          its('group') { should cmp NGINX_GROUP }
           its('mode') { should cmp <= 0660 }
         end
         describe file(file_path) do
           it { should be_owned_by SYS_ADMIN }
+          its('group') { should cmp SYS_ADMIN_GROUP }
           its('mode') { should cmp <= 0660 }
         end
       end
     end
   end
 
-
-  describe.one do
-    describe file(NGINX_CONF_FILE) do
-      it { should be_owned_by WEB_MANAGER }
-      its('mode') { should cmp <= 0660 }
-    end
-    describe file(NGINX_CONF_FILE) do
-      it { should be_owned_by SYS_ADMIN }
-      its('mode') { should cmp <= 0660 }
+  nginx_conf(NGINX_CONF_FILE).conf_files.each do |file|
+    describe.one do
+      describe file(file) do
+        it { should be_owned_by NGINX_OWNER }
+        its('group') { should cmp NGINX_GROUP }
+        its('mode') { should cmp <= 0660 }
+      end
+      describe file(file) do
+        it { should be_owned_by SYS_ADMIN }
+        its('group') { should cmp SYS_ADMIN_GROUP }
+        its('mode') { should cmp <= 0660 }
+      end
     end
   end
 
- 
+  system_directories.each do |directory|
+    describe.one do
+      describe file(directory) do
+        it { should be_owned_by SYS_ADMIN }
+        its('group') { should cmp SYS_ADMIN_GROUP }
+        its('mode') { should cmp <= 0660 }
+      end
+      describe file(directory) do
+        it { should be_owned_by NGINX_OWNER }
+        its('group') { should cmp NGINX_GROUP }
+        its('mode') { should cmp <= 0660 }
+      end
+    end
+  end
+
+  configurable_directories.each do |directory|
+    describe file(directory) do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 0660 }
+    end
+  end
 
 # STOP_DESCRIBE V-2256
 

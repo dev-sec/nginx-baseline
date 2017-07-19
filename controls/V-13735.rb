@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 NGINX_CONF_FILE= attribute(
   'nginx_conf_file',
@@ -39,7 +39,7 @@ options = {
 
 control "V-13735" do
   title "Directory indexing must be disabled on directories not containing index files."
-  
+
   desc"autoindex and random_index directives can be applied to further
   restrict access to file and directories.If a URL which maps to a directory
   is requested, and there is no DirectoryIndex (e.g., index.html) in that
@@ -80,17 +80,17 @@ control "V-13735" do
 
   random_index off;"
 
+  # START_DESCRIBE V-13735
 
-  # START_DESCRIBE V-13727
-  
-  describe parse_config_file(NGINX_CONF_FILE, options) do
-    its('autoindex') { should eq 'off' }
+  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+    describe http['autoindex'].flatten do
+      it { should cmp 'off' }
+    end
+    describe http['random_index'].flatten do
+      it { should cmp 'off' }
+    end
   end
-  describe parse_config_file(NGINX_CONF_FILE, options) do
-    its('random_index') { should eq 'off' }
-  end
 
-  # STOP_DESCRIBE V-13727
-
+  # STOP_DESCRIBE V-13735
 
 end

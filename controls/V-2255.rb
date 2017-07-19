@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,25 +14,56 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
+)
+
+SYS_ADMIN = attribute(
+  'sys_admin',
+  description: "The system adminstrator",
+  default: 'root'
+)
+
+NGINX_GROUP = attribute(
+  'nginx_group',
+  description: "The Nginx group",
+  default: 'nginx'
+)
+
+SYS_ADMIN_GROUP = attribute(
+  'sys_admin_group',
+  description: "The system adminstrator group",
+  default: 'root'
+)
 
 only_if do
-  command('nginx').exist?
+  package('nginx').installed?
 end
 
+options = {
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
+}
+
+options_add_header = {
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
+  multiple_values: true
+}
 
 control "V-2255" do
-  
+
   title "The web server’s htpasswd files (if present) must reflect proper
   ownership and permissions"
-  
+
   desc "In addition to OS restrictions, access rights to files and directories
   can be set on a web site using the web server software.That is, in addition
   to allowing or denying all access rights, a rule can be specified that
@@ -44,7 +75,7 @@ control "V-2255" do
   administrators or web managers, with the account running the web service
   having group permissions of read and execute.  htpasswd is a utility used to
   provide for password access to web sites."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WG270"
@@ -59,10 +90,10 @@ control "V-2255" do
   If permissions on htpasswd are greater than 550, this is a finding.
 
   Owner should be the SA or Web Manager account, if another account has access
-  to this file, this is a finding. " 
+  to this file, this is a finding. "
 
   tag "fix": "The SA or Web Manager account
-  should own the htpasswd file and permissions should be set to 550." 
+  should own the htpasswd file and permissions should be set to 550."
 
 # START_DESCRIBE V-2255
   htpasswd = command('find / -name htpasswd').stdout.chomp
@@ -70,7 +101,19 @@ control "V-2255" do
     describe file(htpwd) do
       its('mode') { should cmp <= 0550 }
     end
+    describe.one do
+      describe file(htpwd) do
+        it { should be_owned_by NGINX_OWNER }
+        its('group') { should cmp NGINX_GROUP }
+      end
+      describe file(htpwd) do
+        it { should be_owned_by SYS_ADMIN }
+        its('group') { should cmp SYS_ADMIN_GROUP }
+      end
+    end
   end
+
+
 # STOP_DESCRIBE V-2255
 
 end

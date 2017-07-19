@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 
 NGINX_DISALLOWED_FILE_LIST= attribute(
@@ -56,10 +56,10 @@ end
 
 
 control "V-13621" do
-  
+
   title "All web server documentation, sample code, example applications, and
   tutorials must be removed from a production web server."
-  
+
   desc "Web server documentation, sample code, example applications, and
   tutorials may be an exploitable threat to a web server. A production web
   server may only contain components that are operationally necessary (e.g.,
@@ -70,7 +70,7 @@ control "V-13621" do
   authorized users (i.e., web administrators and systems administrators).
   Sample applications or scripts have not been evaluated and approved for use
   and may introduce vulnerabilities to the system."
-  
+
   impact 0.7
   tag "severity": "high"
   tag "gtitle": "WG385"
@@ -78,7 +78,7 @@ control "V-13621" do
   tag "rid": "SV-32933r1_rule"
   tag "stig_id": "WG385 A22"
   tag "nist": ["CM-6", "Rev_4"]
-  
+
   tag "check": "Query the SA to determine if all directories that contain
   samples and any scripts used to execute the samples have been removed from
   the server. Each web server has its own list of sample files. This may
@@ -95,25 +95,20 @@ control "V-13621" do
   only allow access to authorized users. If any sample files are found on the
   web server, this is a finding."
 
-# START_DESCRIBE V-13621
-
-  # @fixme aldkfjaldsfkjaldkfj
+  # START_DESCRIBE V-13621
   NGINX_DISALLOWED_FILE_LIST.each do |file|
     describe file(file) do
       it { should_not exist }
     end
   end
 
-# STOP_DESCRIBE V-13621
-
-NGINX_EXCEPTION_FILES.each do |file|
-  describe file(file) do
-    it { should exist }
-    it { should be_owned_by NGINX_OWNER }
-    it { should be_grouped_into NGINX_GROUP }
-    its('mode') { should cmp '640' }
+  NGINX_EXCEPTION_FILES.each do |file|
+    describe file(file) do
+      it { should exist }
+      it { should be_owned_by NGINX_OWNER }
+      it { should be_grouped_into NGINX_GROUP }
+      its('mode') { should cmp '640' }
+    end
   end
-end
-
-
+  # STOP_DESCRIBE V-13621
 end

@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 NGINX_CONF_FILE= attribute(
   'nginx_conf_file',
@@ -32,10 +32,6 @@ only_if do
   command('nginx').exist?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
 control "V-13726" do
   title "The KeepAliveTimeout directive must be defined."
 
@@ -46,7 +42,7 @@ control "V-13726" do
   higher the timeout, the more server processes will be kept occupied waiting
   on connections with idle clients. These requirements are set to mitigate the
   effects of several types of denial of service attacks. "
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA000-WWA024"
@@ -54,7 +50,7 @@ control "V-13726" do
   tag "rid": "SV-32877r1_rule"
   tag "stig_id": "WA000-WWA024 A22"
   tag "nist": ["CM-6", "Rev_4"]
-  
+
   tag "check": "To view the keepalive_timeout directive value enter the
   following command:
 
@@ -65,13 +61,13 @@ control "V-13726" do
   is a finding:
 
   keepalive_timeout   5 5;
-      
+
   The first parameter sets a timeout during which a keep-alive client connection
   will stay open on the server side. The zero value disables keep-alive client
   connections. The second parameter sets a value in the “Keep-Alive:
   timeout=time” response header field. The “Keep-Alive: timeout=time” header
   field is recognized by Mozilla and Konqueror. "
-  
+
   tag "fix": "Edit the configuration file and set the value of
   ""keepalive_timeout"" to the value of 5 or less:
 
@@ -79,8 +75,10 @@ control "V-13726" do
 
   # START_DESCRIBE V-13726
 
-  describe parse_config_file(NGINX_CONF_FILE, options) do
-    its('keepalive_timeout') { should eq '5 5' }
+  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+    describe http['keepalive_timeout'].flatten do
+      it { should cmp ['5', '5'] }
+    end
   end
 
   # STOP_DESCRIBE V-13726

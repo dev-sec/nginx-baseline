@@ -10,7 +10,7 @@
 
 nginx_owner: 'nginx'
 nginx_group: 'nginx'
-web_manager_password: 'nginx@1234#'
+# web_manager_password: 'nginx@1234#'
 
 sys_admin: 'root'
 sys_admin_group: 'root'
@@ -35,6 +35,11 @@ nginx_hardening_file: '/etc/nginx/conf.d/90.hardening.conf'
 nginx_processID_file: '/run/nginx.pid'
 
 
+documented_nginx_user_list:
+   ['nginx'
+   ]
+
+cgi_monitoring_software: 'software'
 # pg_hba_conf_file: /var/lib/pgsql/9.5/data/pg_hba.conf
 # pg_ident_conf_file: /var/lib/pgsql/9.5/data/pg_ident.conf
 
@@ -59,12 +64,11 @@ nginx_processID_file: '/run/nginx.pid'
 nginx_disallowed_file_list :
   ['/usr/share/man/man8/nginx.8.gz']
 
-nginx_allowed_file_list: 
+nginx_allowed_file_list:
   [
   ''
   ]
 nginx_authorized_modules :
-  [  
+  [
   ''
   ]
-

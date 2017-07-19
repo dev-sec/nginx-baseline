@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,42 +14,41 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 NGINX_AUTHORIZED_MODULES= attribute(
   'nginx_authorized_modules',
   description: 'List of  authorized nginx modules.',
-  default: [  
-            'http_addition', 
-            'http_auth_request', 
-            'http_dav', 
-            'http_flv', 
-            'http_gunzip', 
+  default: [
+            'http_addition',
+            'http_auth_request',
+            'http_dav',
+            'http_flv',
+            'http_gunzip',
             'http_gzip_static',
            ]
 )
 NGINX_UNAUTHORIZED_MODULES= attribute(
   'nginx_unauthorized_modules',
   description: 'List of  unauthorized nginx modules.',
-  default: [  
-            'http_mp4', 
-            'http_random_index', 
-            'http_realip', 
-            'http_secure_link', 
-            'http_slice', 
-            'http_ssl',
+  default: [
+            'http_mp4'
            ]
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26285" do
   title "Active software modules must be minimized."
-  
+
   desc "Modules are the source of nginx httpd servers core and dynamic
   capabilities. Thus not every module available is needed for operation. Most
   installations only need a small subset of the modules available. By
@@ -57,7 +56,7 @@ control "V-26285" do
   the number of doors and have therefore reduced the attack surface of the web
   site. Likewise having fewer modules means less software that could have
   vulnerabilities."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA00500"
@@ -65,7 +64,7 @@ control "V-26285" do
   tag "rid": "SV-33215r1_rule"
   tag "stig_id": "WA00500 A22"
   tag "nist": ["CM-2", "Rev_4"]
-  
+
   tag "check": "Enter the following command:
 
   nginx -V
@@ -85,19 +84,21 @@ control "V-26285" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26285
+
     loaded_modules = command('nginx -V 2>&1').stdout.to_s.scan(/--with-(\S+)_module/).flatten
 
     loaded_modules.each do |_module|
-      describe NGINX_AUTHORIZED_MODULES do
-        it {should include(_module)}
+      describe _module do
+        it {should be_in NGINX_AUTHORIZED_MODULES}
       end
     end
 
     loaded_modules.each do |_module|
-      describe NGINX_UNAUTHORIZED_MODULES do
-        it {should_not include(_module)}
+      describe _module do
+        it {should_not be_in NGINX_UNAUTHORIZED_MODULES}
       end
     end
+
   # STOP_DESCRIBE V-26285
 
 end

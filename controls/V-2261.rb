@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,13 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 
 only_if do
@@ -60,13 +60,11 @@ control "V-2261" do
 
 
 # START_DESCRIBE V-2261
-  only_if do
-    command('telnet').exist?
-  end  
 
-  describe command("telnet localhost 25") do
-    its('stdout') {should match /Connection refused/} #need fixing
-  end 
+  describe host('localhost', port: 25, protocol: 'tcp') do
+    it { should_not be_reachable }
+  end
+
 # STOP_DESCRIBE V-2261
 
 end

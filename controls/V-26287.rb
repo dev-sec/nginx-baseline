@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,17 +14,17 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-26287" do
   title "Web Distributed Authoring and Versioning (WebDAV) must be disabled."
-  
+
   desc "Ngx_http_dav_module supports WebDAV ('Web-based Distributed Authoring
   and Versioning') functionality for nginx. WebDAV is an extension to the HTTP
   protocol which allows clients to create, move, and delete files and
@@ -32,7 +32,7 @@ control "V-26287" do
   security concerns as it may allow clients to modify unauthorized files on
   the web server. Therefore, the WebDav module ngx_http_dav_module should be
   disabled."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA00505"
@@ -40,7 +40,7 @@ control "V-26287" do
   tag "rid": "SV-33216r1_rule"
   tag "stig_id": "WA00505 A22"
   tag "nist": ["AC-3", "Rev_4"]
-  
+
   tag "check": "Enter the following command:
 
   nginx -V
@@ -56,8 +56,11 @@ control "V-26287" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26287
-  describe command('nginx -V 2>&1') do
-    its('stdout') {should_not match 'http_dav_module'}
+  loaded_modules = command('nginx -V 2>&1').stdout.to_s.scan(/--with-(\S+)_module/).flatten
+
+  describe loaded_modules do
+    it {should_not include 'http_dav_module'}
   end
+
   # STOP_DESCRIBE V-26287
 end
