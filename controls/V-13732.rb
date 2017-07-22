@@ -76,8 +76,31 @@ control "V-13732" do
   # START_DESCRIBE V-13732
 
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['disable_symlinks'].flatten do
-      it { should cmp 'on' }
+    describe http['disable_symlinks'] do
+      it { should cmp [['on']] }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['disable_symlinks'].nil?
+            describe server['disable_symlinks'] do
+              it { should cmp [['on']] }
+            end
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['disable_symlinks'].nil?
+                describe location['disable_symlinks'] do
+                  it { should cmp [['on']] }
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 

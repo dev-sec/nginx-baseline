@@ -22,11 +22,9 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-
 only_if do
   command('nginx').exist?
 end
-
 
 control "V-2261" do
   title "A public web server must limit email to outbound only."

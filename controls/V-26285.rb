@@ -22,16 +22,35 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+NGINX_PATH= attribute(
+  'nginx_path',
+  description: 'Path for the nginx configuration file',
+  default: "/usr/sbin/nginx"
+)
+
 NGINX_AUTHORIZED_MODULES= attribute(
   'nginx_authorized_modules',
   description: 'List of  authorized nginx modules.',
   default: [
-            'http_addition',
-            'http_auth_request',
-            'http_dav',
-            'http_flv',
-            'http_gunzip',
-            'http_gzip_static',
+            "http_addition",
+            "http_auth_request",
+            "http_dav",
+            "http_flv",
+            "http_gunzip",
+            "http_gzip_static",
+            "http_mp4",
+            "http_random_index",
+            "http_realip",
+            "http_secure_link",
+            "http_slice",
+            "http_ssl",
+            "http_stub_status",
+            "http_sub",
+            "http_v2",
+            "mail_ssl",
+            "stream_realip",
+            "stream_ssl",
+            "stream_ssl_preread"
            ]
 )
 NGINX_UNAUTHORIZED_MODULES= attribute(
@@ -85,19 +104,13 @@ control "V-26285" do
 
   # START_DESCRIBE V-26285
 
-    loaded_modules = command('nginx -V 2>&1').stdout.to_s.scan(/--with-(\S+)_module/).flatten
+  describe nginx_module(nginx_path:NGINX_PATH) do
+    its('loaded_modules') { should be_in NGINX_AUTHORIZED_MODULES }
+  end
 
-    loaded_modules.each do |_module|
-      describe _module do
-        it {should be_in NGINX_AUTHORIZED_MODULES}
-      end
-    end
-
-    loaded_modules.each do |_module|
-      describe _module do
-        it {should_not be_in NGINX_UNAUTHORIZED_MODULES}
-      end
-    end
+  describe NGINX_UNAUTHORIZED_MODULES do
+    it { should_not be_in nginx_module(nginx_path:NGINX_PATH).loaded_modules }
+  end
 
   # STOP_DESCRIBE V-26285
 

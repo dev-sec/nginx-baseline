@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,19 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+NGINX_PATH= attribute(
+  'nginx_path',
+  description: 'Path for the nginx configuration file',
+  default: "/usr/sbin/nginx"
+)
 
 control "V-26294" do
   title "Web server status module must be disabled."
@@ -29,7 +35,7 @@ control "V-26294" do
   thecurrent server and performance statistics. While having server
   configuration and status information available as a web page may be
   convenient, it is recommended that these modules not be enabled."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA00510"
@@ -37,7 +43,7 @@ control "V-26294" do
   tag "rid": "SV-33218r1_rule"
   tag "stig_id": "WA00510 A22"
   tag "nist": ["AC-3", "Rev_4"]
-  
+
   tag "check": "Enter the following command:
 
   nginx -V
@@ -53,9 +59,11 @@ control "V-26294" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26294
-  describe command('nginx -V 2>&1') do
-    its('stdout') {should_not match 'http_status_module'}
+
+  describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_http_status') do
+    it { should_not be_loaded }
   end
+
   # STOP_DESCRIBE V-26294
 
 end

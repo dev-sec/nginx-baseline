@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,19 +14,19 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-13620" do
-  
+
   title "A private web server’s list of CAs in a trust hierarchy must lead to
   an authorizedDoD PKI Root CA."
-  
+
   desc "A PKI certificate is a digital identifier that establishes the identity
   of an individual or a platform. A server that has a certificate provides
   users with third-party confirmation of authenticity. Most web browsers
@@ -38,7 +38,7 @@ control "V-13620" do
   The use of a trusted certificate validation hierarchy is crucial to the
   ability to control access to a site’s server and to prevent unauthorized
   access. Only DoD-approved PKIs will be utilized. "
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WG355"
@@ -46,7 +46,7 @@ control "V-13620" do
   tag "rid": "SV-32936r1_rule"
   tag "stig_id": "WG355 A22"
   tag "nist": ["IA-5", "SC-12", "Rev_4"]
-  
+
   tag "check": "Enter the following command:
 
   find / -name ssl.conf  note the path of the file.
@@ -67,8 +67,12 @@ control "V-13620" do
   Authorities (ECA), if approved by the DAA. The PKE InstallRoot 3.06 System
   Administrator Guide (SAG), dated 8 Jul 2008, contains a complete list of DoD,
   ECA, and IECA CAs."
-  
+
   tag "fix": "Configure the web server’s trust store to trust only DoD-
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
+
+  describe x509_certificate(SSL_CERT) do
+  end
+  end
 
 end

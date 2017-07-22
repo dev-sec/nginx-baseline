@@ -83,11 +83,36 @@ control "V-13735" do
   # START_DESCRIBE V-13735
 
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['autoindex'].flatten do
-      it { should cmp 'off' }
+    describe http['autoindex'] do
+      it { should cmp [['off']] }
     end
-    describe http['random_index'].flatten do
-      it { should cmp 'off' }
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['autoindex'].nil?
+            describe server['autoindex'] do
+              it { should cmp [['off']] }
+            end
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['autoindex'].nil?
+                describe location['autoindex'] do
+                  it { should cmp [['off']] }
+                end
+              end
+              if !location['random_index'].nil?
+                describe location['random_index'] do
+                  it { should cmp [['off']] }
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 

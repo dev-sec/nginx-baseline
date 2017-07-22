@@ -52,27 +52,9 @@ SYS_ADMIN_GROUP = attribute(
   default: 'root'
 )
 
-
 only_if do
   command('nginx').exist?
 end
-
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-options_add_header = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
-}
-
-configuration_files   = ['/usr/sbin/nginx',
-                        '/etc/nginx/',
-                        '/etc/nginx/conf.d',
-                        '/etc/nginx/modules',
-                        '/usr/share/nginx/html',
-                        '/var/log/nginx'
-                        ]
 
 control "V-2259" do
 
@@ -127,9 +109,18 @@ control "V-2259" do
   /usr/share/nginx/html root WebAdmin  775/664
   /var/log/nginx        root WebAdmin  750/640
   "
-  # STOP_DESCRIBE V-2259
 
-  system_directories.each do |directory|
+  # START_DESCRIBE V-2259
+
+  configuration_files   = ['/usr/sbin/nginx',
+                          '/etc/nginx/',
+                          '/etc/nginx/conf.d',
+                          '/etc/nginx/modules',
+                          '/usr/share/nginx/html',
+                          '/var/log/nginx'
+                          ]
+
+  configuration_files.each do |directory|
     describe.one do
       describe file(directory) do
         it { should be_owned_by SYS_ADMIN }
@@ -143,5 +134,6 @@ control "V-2259" do
       end
     end
   end
+
   # STOP_DESCRIBE V-2259
 end

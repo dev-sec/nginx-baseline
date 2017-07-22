@@ -59,5 +59,8 @@ control "V-2236" do
   if removed, document the compiler installation with the ISSO/ISSM and ensure
   that the compiler is restricted to only administrative users."
 
+  describe package('gcc') do
+    it { should_not be_installed }
+  end
 
 end

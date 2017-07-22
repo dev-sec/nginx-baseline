@@ -71,11 +71,44 @@ control "V-13736" do
   # START_DESCRIBE V-13736
 
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['client_body_buffer_size'].flatten.first.to_i do
+    describe http['client_body_buffer_size'].join.to_i do
       it { should cmp <= '100k'.to_i }
     end
-    describe http['client_max_body_size'].flatten.first.to_i do
+    describe http['client_max_body_size'].join.to_i do
       it { should cmp <= '100k'.to_i }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['client_body_buffer_size'].nil?
+            describe server['client_body_buffer_size'].join.to_i do
+              it { should cmp <= '100k'.to_i }
+            end
+          end
+          if !server['client_max_body_size'].nil?
+            describe server['client_max_body_size'].join.to_i do
+              it { should cmp <= '100k'.to_i }
+            end
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['client_body_buffer_size'].nil?
+                describe location['client_body_buffer_size'].join.to_i do
+                  it { should cmp <= '100k'.to_i }
+                end
+              end
+              if !location['client_max_body_size'].nil?
+                describe location['client_max_body_size'].join.to_i do
+                  it { should cmp <= '100k'.to_i }
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 

@@ -22,6 +22,12 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+NGINX_PATH= attribute(
+  'nginx_path',
+  description: 'Path for the nginx configuration file',
+  default: "/usr/sbin/nginx"
+)
+
 control "V-26287" do
   title "Web Distributed Authoring and Versioning (WebDAV) must be disabled."
 
@@ -56,10 +62,9 @@ control "V-26287" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26287
-  loaded_modules = command('nginx -V 2>&1').stdout.to_s.scan(/--with-(\S+)_module/).flatten
 
-  describe loaded_modules do
-    it {should_not include 'http_dav_module'}
+  describe nginx_module( nginx_path:NGINX_PATH, module_name:'ngx_http_dav') do
+    it { should_not be_loaded }
   end
 
   # STOP_DESCRIBE V-26287

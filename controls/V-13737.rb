@@ -71,5 +71,18 @@ control "V-13737" do
     end
   end
 
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['large_client_header_buffers'].nil?
+            describe server['large_client_header_buffers'].flatten do
+              it { should cmp ['2','1k'] }
+            end
+          end
+        end
+      end
+    end
+  end
   # STOP_DESCRIBE V-13737
 end

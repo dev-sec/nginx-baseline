@@ -72,7 +72,7 @@ control "V-2232" do
   service(s) password."
 
   describe passwd.users(NGINX_OWNER).passwords do
-    it { should_not cmp ''}
+    it { should_not cmp ['']}
   end
 
 end

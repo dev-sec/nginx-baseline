@@ -65,9 +65,23 @@ control "V-13738" do
 
   # START_DESCRIBE V-13738
 
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['client_header_buffer_size'].flatten.first.to_i do
+  nginx_conf(NGINX_CONF_FILE).http.each do |http|
+    describe http['client_header_buffer_size'].join.to_i do
       it { should cmp <= '1k'.to_i }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['client_header_buffer_size'].nil?
+            describe server['client_header_buffer_size'].join.to_i do
+              it { should cmp <= '1k'.to_i }
+            end
+          end
+        end
+      end
     end
   end
 

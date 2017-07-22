@@ -74,8 +74,8 @@ control "V-13727" do
 
   # START_DESCRIBE V-13727
 
-  describe nginx_conf(NGINX_CONF_FILE).params['worker_processes'].flatten do
-    it { should cmp 'auto' }
+  describe nginx_conf(NGINX_CONF_FILE).params['worker_processes'] do
+    it { should cmp [['auto']] }
   end
 
   # STOP_DESCRIBE V-13727

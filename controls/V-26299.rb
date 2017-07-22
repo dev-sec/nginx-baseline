@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,17 +14,23 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+NGINX_PATH= attribute(
+  'nginx_path',
+  description: 'Path for the nginx configuration file',
+  default: "/usr/sbin/nginx"
+)
 
 control "V-26299" do
   title "The web server must not be configured as a proxy server."
-  
+
   desc "The ngx_http_proxy_module allow the server to act as a proxy (either
   forward or reverse proxy) of http and other protocols with additional proxy
   modules loaded. If the nginx installation is not intended to proxy requests
@@ -36,7 +42,7 @@ control "V-26299" do
   for web servers that will also proxy requests is a very common attack, as
   proxy servers are useful for anonymizing attacks on other servers, or
   possibly proxying requests into an otherwise protected network."
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA00520"
@@ -44,7 +50,7 @@ control "V-26299" do
   tag "rid": "SV-33220r1_rule"
   tag "stig_id": "WA00520 A22"
   tag "nist": ["AC-3", "Rev_4"]
-  
+
   tag "check": "Enter the following command:
 
   nginx -V
@@ -53,7 +59,7 @@ control "V-26299" do
   found, this is a finding.
 
   ngx_http_proxy_module"
-  
+
   tag "fix": "Disable any modules that are not needed.
 
   Use the configure script (available in the nginx download package) to exclude
@@ -61,8 +67,10 @@ control "V-26299" do
 
 
   # START_DESCRIBE V-26299
-  describe command('nginx -V 2>&1') do
-    its('stdout') {should_not match 'http_proxy_module'}
+
+  describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_http_proxy') do
+    it { should_not be_loaded }
   end
+
   # STOP_DESCRIBE V-26299
 end

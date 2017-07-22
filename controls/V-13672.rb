@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,25 +14,25 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-13672" do
-  
+
   title "The private web server must use an approved DoD certificate
   validation process."
-  
+
   desc  "Without the use of a certificate validation process, the site is
   vulnerable to accepting certificates that have expired or have been revoked.
   This would allow unauthorized individuals access to the web server.  This also
   defeats the purpose of the multi-factor authentication provided by the PKI
   process. "
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WG145"
@@ -40,7 +40,7 @@ control "V-13672" do
   tag "rid": "SV-32954r2_rule"
   tag "stig_id": "WG145 A22"
   tag "nist": ["IA-5", "SC-12", "Rev_4"]
-  
+
   tag "check": "The reviewer should query the ISSO, the SA, the web
   administrator, or developers as necessary to determine if the web server is
   configured to utilize an approved DoD certificate validation process.

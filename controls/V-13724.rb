@@ -83,11 +83,30 @@ control "V-13724" do
   # START_DESCRIBE V-13724
 
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['client_body_timeout'].flatten.first do
+    describe http['client_body_timeout'].join do
       it { should cmp <= '10' }
     end
-    describe http['client_header_timeout'].flatten.first do
+    describe http['client_header_timeout'].join do
       it { should cmp <= '10' }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['client_body_timeout'].nil?
+            describe http['client_body_timeout'].join do
+              it { should cmp <= '10' }
+            end
+          end
+          if !server['client_header_timeout'].nil?
+            describe http['client_header_timeout'].join do
+              it { should cmp <= '10' }
+            end
+          end
+        end
+      end
     end
   end
 

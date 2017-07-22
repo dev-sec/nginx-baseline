@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,19 +14,34 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+AUTHORIZED_PROCESS_LIST = attribute(
+  'authorized_process_list',
+  description: "List of authorized running processes",
+  default: [ 'nginx',
+             'systemd',
+             'systemd-journal',
+             'systemd-udevd',
+             'systemd-logind',
+             'dbus-daemon',
+             'agetty',
+             'bash',
+             'ps'
+           ]
+)
 
 control "V-2251" do
-  
+
   title "All utility programs, not necessary for operations, must be removed
   or disabled. "
-  
+
   desc  "Just as running unneeded services and protocols is a danger to the
   web server at the lower levels of the OSI model, running unneeded utilities
   and programs is also a danger at the application layer of the OSI model.
@@ -34,7 +49,7 @@ control "V-2251" do
   programs that are troublesome. Individual productivity tools have no
   legitimate place or use on an enterprise, production web server and they are
   also prone to their own security risks."
-  
+
   impact 0.3
   tag "severity": "low"
   tag "gtitle": "WG130"
@@ -42,7 +57,7 @@ control "V-2251" do
   tag "rid": "SV-32955r2_rule"
   tag "stig_id": "WG130 A22"
   tag "nist": ["CM-6", "Rev_4"]
-  
+
   tag "check": "If the site requires the use of a particular piece of
   software, the ISSO will need to maintain documentation identifying this
   software as necessary for operations. The software must be operated at the
@@ -66,7 +81,13 @@ control "V-2251" do
 
   If, after review of the application on the system, there is no justification
   for the identified software, this is a finding.  "
-  
+
   tag "fix": "Remove any unnecessary applications."
+
+  ps_list = command('ps -A').stdout.scan(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\s(.+)/).flatten
+
+  describe ps_list do
+    it { should be_in AUTHORIZED_PROCESS_LIST}
+  end
 
 end

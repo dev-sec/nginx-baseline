@@ -40,16 +40,6 @@ only_if do
   package('nginx').installed?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-options_add_header = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
-}
-
-
 control "V-2257" do
 
   title "Administrative users and groups that have access rights to the web
@@ -91,12 +81,8 @@ control "V-2257" do
 
   # STOP_DESCRIBE V-2257
 
-  nginx_user_list = nginx_conf(NGINX_CONF_FILE).params['user'].flatten
-
-  nginx_user_list.each do |user|
-    describe user do
-      it{ should be_in DOCUMENTED_NGINX_USER_LIST }
-    end
+  describe nginx_conf(NGINX_CONF_FILE).user.flatten do
+    it{ should be_in DOCUMENTED_NGINX_USER_LIST }
   end
 
   # STOP_DESCRIBE V-2257

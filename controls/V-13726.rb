@@ -76,8 +76,31 @@ control "V-13726" do
   # START_DESCRIBE V-13726
 
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['keepalive_timeout'].flatten do
-      it { should cmp ['5', '5'] }
+    describe http['keepalive_timeout'] do
+      it { should cmp [['5', '5']] }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['keepalive_timeout'].nil?
+            describe server['keepalive_timeout'] do
+              it { should cmp [['5', '5']] }
+            end
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['keepalive_timeout'].nil?
+                describe location['keepalive_timeout'] do
+                  it { should cmp [['5', '5']] }
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 
