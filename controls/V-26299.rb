@@ -28,6 +28,10 @@ NGINX_PATH= attribute(
   default: "/usr/sbin/nginx"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26299" do
   title "The web server must not be configured as a proxy server."
 
@@ -65,12 +69,9 @@ control "V-26299" do
   Use the configure script (available in the nginx download package) to exclude
   modules using the --without {module_name} option to reject unneeded modules."
 
-
   # START_DESCRIBE V-26299
-
   describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_http_proxy') do
     it { should_not be_loaded }
   end
-
   # STOP_DESCRIBE V-26299
 end

@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,13 +14,17 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+only_if do
+  command('nginx').exist?
+end
 
 control "V-2234" do
 
@@ -58,9 +62,12 @@ control "V-2234" do
 
   If private resources (e.g., drives, partitions, folders/directories, printers,
   etc.) are shared with the public web server, then this is a finding. "
-  
+
   tag "fix": "Configure the public web server to not have a trusted
   relationship with any system resource that is also not accessible to the
   public. Web content is not to be shared via Microsoft shares or NFS mounts."
 
+  only_if {
+    false
+  }
 end

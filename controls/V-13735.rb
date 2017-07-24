@@ -32,11 +32,6 @@ only_if do
   command('nginx').exist?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-
 control "V-13735" do
   title "Directory indexing must be disabled on directories not containing index files."
 
@@ -81,7 +76,6 @@ control "V-13735" do
   random_index off;"
 
   # START_DESCRIBE V-13735
-
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
     describe http['autoindex'] do
       it { should cmp [['off']] }
@@ -115,7 +109,6 @@ control "V-13735" do
       end
     end
   end
-
   # STOP_DESCRIBE V-13735
 
 end

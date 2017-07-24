@@ -28,6 +28,10 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26326" do
 
   title "The web server must be configured to listen on a specific IP address
@@ -73,7 +77,6 @@ control "V-26326" do
   listen on a specific IP address and port. "
 
   # START_DESCRIBE V-26326
-
   if !nginx_conf(NGINX_CONF_FILE).http.nil?
     nginx_conf(NGINX_CONF_FILE).http.each do |http|
       if !http['server'].nil?
@@ -101,7 +104,6 @@ control "V-26326" do
       end
     end
   end
-
   # STOP_DESCRIBE V-26326
 
 end

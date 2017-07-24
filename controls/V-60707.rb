@@ -28,6 +28,9 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
+only_if do
+  command('nginx').exist?
+end
 
 control "V-60707" do
   title "The web server must remove all export ciphers from the cipher suite."
@@ -113,7 +116,6 @@ control "V-60707" do
   "
 
   # START_DESCRIBE V-60707
-
   disabled_ssl_ciphers = ['aNULL', 'eNULL', 'EXPORT', 'DES', 'MD5', 'PSK', 'RC4']
 
   if !nginx_conf(NGINX_CONF_FILE).http.nil?
@@ -160,7 +162,6 @@ control "V-60707" do
       end
     end
   end
-
   # STOP_DESCRIBE V-60707
 
 end

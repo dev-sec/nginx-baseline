@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: APACHE SERVER 2.2 for Unix  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: APACHE SERVER 2.2 for Unix
+Status: Accepted
 
 All directives specified in this STIG must be specifically set (i.e. the
 server is not allowed to revert to programmed defaults for these directives).
@@ -14,19 +14,23 @@ used, there are procedures for reviewing them in the overview document. The
 Web Policy STIG should be used in addition to the Apache Site and Server STIGs
 in order to do a comprehensive web server review.
 
-Release Date: 2015-08-28 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2015-08-28
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
+
+only_if do
+  command('nginx').exist?
+end
 
 control "V-13613" do
 
   title "The Web site software used with the web server must have all
   applicable security patches applied and documented."
-  
+
   desc "The IAVM process does not address all patches that have been identified
   for the host operating system or, in this case, the web server software
   environment. Many vendors have subscription services available to notify
@@ -44,7 +48,7 @@ control "V-13613" do
   patches will be applied to the operating system and to the web server
   software. Security patches are deemed applicable if the product is installed,
   even if it is not used or is disabled.  "
-  
+
   impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA230"
@@ -52,7 +56,7 @@ control "V-13613" do
   tag "rid": "SV-32969r2_rule"
   tag "stig_id": "WA230 A22"
   tag "nist": ["CM-6", "Rev_4"]
-  
+
   tag "check": "Query the web administrator to determine if the site has a
   detailed process as part of its configuration management plan to stay
   compliant with all security-related patches.
@@ -64,9 +68,12 @@ control "V-13613" do
 
   If the site is not in compliance with all applicable security patches, this is
   a finding."
-  
+
   tag "fix": "Establish a detailed process as part of the configuration
   management plan to stay compliant with all web server security-related
   patches."
 
+  only_if {
+    false
+  }
 end

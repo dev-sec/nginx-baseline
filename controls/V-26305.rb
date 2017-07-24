@@ -53,6 +53,10 @@ SYS_ADMIN_GROUP = attribute(
   default: 'root'
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26305" do
   title "The process ID (PID) file must be properly secured."
 
@@ -85,7 +89,6 @@ control "V-26305" do
   file folder. "
 
   # START_DESCRIBE V-26305
-
   authorized_owner_list = [ NGINX_OWNER, SYS_ADMIN ]
   authorized_group_list = [ NGINX_GROUP, SYS_ADMIN_GROUP ]
 
@@ -98,7 +101,6 @@ control "V-26305" do
   describe nginx_conf(NGINX_CONF_FILE) do
     its ('pid.join') { should_not match %r(#{WEBSERVERROOT})}
   end
-
   # STOP_DESCRIBE V-26305
 
 end

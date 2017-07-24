@@ -32,11 +32,6 @@ only_if do
   command('nginx').exist?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-
 control "V-13732" do
   title "The ""disable_symlinks"" setting must be disabled."
   desc "The disable_symlinks directive determines how symbolic links should be
@@ -103,7 +98,6 @@ control "V-13732" do
       end
     end
   end
-
   # STOP_DESCRIBE V-13732
 
 end

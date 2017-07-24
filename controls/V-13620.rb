@@ -22,6 +22,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-13620" do
 
   title "A private web server’s list of CAs in a trust hierarchy must lead to
@@ -51,9 +55,9 @@ control "V-13620" do
 
   find / -name ssl.conf  note the path of the file.
 
-  grep ""SSLCACertificateFile"" /path/of/ssl.conf
+  grep ""ssl_client_certificate"" in conf files in context http,server
 
-  Review the results to determine the path of the SSLCACertificateFile.
+  Review the results to determine the path of the ssl_client_certificate.
 
   more /path/of/ca-bundle.crt
 
@@ -71,8 +75,8 @@ control "V-13620" do
   tag "fix": "Configure the web server’s trust store to trust only DoD-
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
 
-  describe x509_certificate(SSL_CERT) do
-  end
-  end
+  only_if {
+    false
+  }
 
 end

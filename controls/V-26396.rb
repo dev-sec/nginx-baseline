@@ -28,6 +28,10 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26396" do
   title "HTTP request methods must be limited."
 
@@ -68,9 +72,7 @@ control "V-26396" do
   ## In this case, it does not accept other HTTP methods such as HEAD, DELETE,
   SEARCH, TRACE ##
 "
-
   # START_DESCRIBE V-26396
-
   if !nginx_conf(NGINX_CONF_FILE).http.nil?
     nginx_conf(NGINX_CONF_FILE).http.each do |http|
       if !http['server'].nil?
@@ -92,7 +94,6 @@ control "V-26396" do
       end
     end
   end
-
   # STOP_DESCRIBE V-26396
 
 end

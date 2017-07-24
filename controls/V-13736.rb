@@ -69,7 +69,6 @@ control "V-13736" do
   and client_max_body_size to 100k or less."
 
   # START_DESCRIBE V-13736
-
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
     describe http['client_body_buffer_size'].join.to_i do
       it { should cmp <= '100k'.to_i }
@@ -111,7 +110,6 @@ control "V-13736" do
       end
     end
   end
-
   # STOP_DESCRIBE V-13736
 
 end

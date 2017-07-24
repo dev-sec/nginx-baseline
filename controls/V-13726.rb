@@ -74,7 +74,6 @@ control "V-13726" do
   keepalive_timeout   5 5;"
 
   # START_DESCRIBE V-13726
-
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
     describe http['keepalive_timeout'] do
       it { should cmp [['5', '5']] }
@@ -103,7 +102,5 @@ control "V-13726" do
       end
     end
   end
-
   # STOP_DESCRIBE V-13726
-
 end

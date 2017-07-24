@@ -64,7 +64,6 @@ control "V-13738" do
   to 1k or less."
 
   # START_DESCRIBE V-13738
-
   nginx_conf(NGINX_CONF_FILE).http.each do |http|
     describe http['client_header_buffer_size'].join.to_i do
       it { should cmp <= '1k'.to_i }
@@ -84,6 +83,5 @@ control "V-13738" do
       end
     end
   end
-
   # STOP_DESCRIBE V-13738
 end

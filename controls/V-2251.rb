@@ -37,6 +37,10 @@ AUTHORIZED_PROCESS_LIST = attribute(
            ]
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-2251" do
 
   title "All utility programs, not necessary for operations, must be removed

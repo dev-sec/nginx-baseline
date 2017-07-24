@@ -32,15 +32,6 @@ only_if do
   command('nginx').exist?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-options_add_header = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
-}
-
 control "V-6724" do
   title "Web server and/or operating system information must be protected."
 

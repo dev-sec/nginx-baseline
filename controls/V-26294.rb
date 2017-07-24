@@ -28,6 +28,10 @@ NGINX_PATH= attribute(
   default: "/usr/sbin/nginx"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26294" do
   title "Web server status module must be disabled."
 
@@ -59,11 +63,9 @@ control "V-26294" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26294
-
   describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_http_status') do
     it { should_not be_loaded }
   end
-
   # STOP_DESCRIBE V-26294
 
 end

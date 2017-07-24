@@ -33,7 +33,7 @@ NGINX_DISALLOWED_FILE_LIST= attribute(
 NGINX_EXCEPTION_FILES= attribute(
   'nginx_allowed_file_list',
   description: 'File list of allowed documentation, sample code, example applications, and tutorials.',
-  default: [ ''
+  default: [ 
            ]
 )
 
@@ -53,7 +53,6 @@ NGINX_GROUP = attribute(
 only_if do
   command('nginx').exist?
 end
-
 
 control "V-13621" do
 

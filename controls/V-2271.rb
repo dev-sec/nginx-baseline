@@ -67,7 +67,7 @@ control "V-2271" do
   batch file that would identify a change in the file."
 
   # STOP_DESCRIBE V-2271
-  describe package(MONITORINGSOFTWARE) do
+  describe package(CGIMONITORINGSOFTWARE) do
     it{ should be_installed }
   end
   # STOP_DESCRIBE V-2271

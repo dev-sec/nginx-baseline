@@ -28,6 +28,10 @@ NGINX_PATH= attribute(
   default: "/usr/sbin/nginx"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-26368" do
   title "Automatic directory indexing must be disabled."
 
@@ -62,10 +66,8 @@ control "V-26368" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26368
-
   describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_autoindex') do
     it { should_not be_loaded }
   end
-
   # STOP_DESCRIBE V-26368
 end

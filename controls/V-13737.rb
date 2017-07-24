@@ -64,7 +64,6 @@ control "V-13737" do
   large_client_header_buffers to 2 buffers and 1k."
 
   # START_DESCRIBE V-13737
-
   nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
     describe http['large_client_header_buffers'].flatten do
       it { should cmp ['2','1k'] }

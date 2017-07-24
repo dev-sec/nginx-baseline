@@ -28,6 +28,10 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-new" do
 
   title "The web server must restrict SSL protocols."
@@ -65,7 +69,6 @@ If the entry is not found, this is a finding."
   "
 
   # START_DESCRIBE V-60707
-
   nginx_conf(NGINX_CONF_FILE).http.each do |http|
     describe http['ssl_protocols'] do
       it { should cmp [['TLSv1 TLSv1.1 TLSv1.2']] }
@@ -85,7 +88,6 @@ If the entry is not found, this is a finding."
       end
     end
   end
-
   # STOP_DESCRIBE V-60707
 
 end

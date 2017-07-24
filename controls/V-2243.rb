@@ -36,6 +36,10 @@ SERVER_IP= attribute(
   default: '62.156.244.13'
 )
 
+only_if do
+  command('nginx').exist?
+end
+
 control "V-2243" do
 
   title "A private web server must be located on a separate controlled access
