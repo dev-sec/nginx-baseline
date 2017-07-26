@@ -111,7 +111,6 @@ control "V-2259" do
   "
 
   # START_DESCRIBE V-2259
-
   describe.one do
     describe file('/usr/sbin/nginx') do
       it { should be_owned_by SYS_ADMIN }
