@@ -82,6 +82,7 @@ control "V-26396" do
           end
           if !server['if'].nil?
             server['if'].each do |ifcondition|
+              # TODO: Fix nginx_conf 'if'resouce bug and fix test accordingly, current test works
               describe ifcondition['_'].join do
                 it { should cmp '($request_method!~^(GET|PUT|POST)$)'}
               end

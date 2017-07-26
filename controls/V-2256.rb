@@ -106,11 +106,24 @@ control "V-2256" do
 
 # START_DESCRIBE V-2256
 
-  access_control_files = [ ".htaccess",
-                          ".htpasswd"]
-  system_directories = ['/',
+  access_control_files = [ '.htaccess',
+                          '.htpasswd']
+
+  system_directories = ['/bin',
+                        '/dev',
                         '/etc',
-                        '/bin']
+                        '/lib',
+                        '/media',
+                        '/mnt',
+                        '/mnt/',
+                        '/proc',
+                        '/sbin',
+                        '/sys',
+                        '/tmp',
+                        '/usr',
+                        '/var',
+                        ]
+
   configurable_directories = ['/usr/share/nginx/html']
 
   access_control_files.each do |file|

@@ -22,10 +22,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-CGIMONITORINGSOFTWARE = attribute(
-  'cgi_monitoring_software',
+MONITORINGSOFTWARE = attribute(
+  'monitoring_software',
   description: "Monitoring software for CGI or equivalent programs",
-  default: 'monitoringsoftware'
+  default: 'auditd'
 )
 
 only_if do
@@ -67,7 +67,7 @@ control "V-2271" do
   batch file that would identify a change in the file."
 
   # STOP_DESCRIBE V-2271
-  describe package(CGIMONITORINGSOFTWARE) do
+  describe package(MONITORINGSOFTWARE) do
     it{ should be_installed }
   end
   # STOP_DESCRIBE V-2271

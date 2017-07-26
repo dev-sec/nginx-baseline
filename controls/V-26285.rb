@@ -57,7 +57,6 @@ NGINX_UNAUTHORIZED_MODULES= attribute(
   'nginx_unauthorized_modules',
   description: 'List of  unauthorized nginx modules.',
   default: [
-            'http_mp4'
            ]
 )
 

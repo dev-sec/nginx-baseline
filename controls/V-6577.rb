@@ -22,12 +22,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-WEBSERVERROOT = attribute(
-  'webserverroot',
-  description: 'Path to webserve root directory',
-  default: "/usr/share/nginx/html"
-)
-
 ALLOWED_SERVICES_LIST= attribute(
   'allowed_services_list',
   description: 'Path for the nginx configuration file',
@@ -84,7 +78,8 @@ DISALLOWED_SERVICES_LIST= attribute(
   'disallowed_services_list',
   description: 'Path for the nginx configuration file',
   default: ['mysql',
-            'postgres'
+            'postgres',
+            'named'
            ]
 )
 
@@ -140,6 +135,36 @@ control "V-6577" do
   same partition as the operating systems root directory or the web document
   root. If it is, this is a finding."
 
+  # collect root directores from nginx_conf
+  webserver_roots = []
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      if !http['root'].nil?
+        webserver_roots.push(http['root'].join)
+      end
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['root'].nil?
+            webserver_roots.push(server['root'].join)
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['root'].nil?
+                webserver_roots.push(location['root'].join)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
   services = command('systemctl -r --type service --all').stdout.scan(/^\s\s(.+).service/).flatten
 
   describe services do
@@ -153,8 +178,12 @@ control "V-6577" do
   services.each do |service|
     service_path = service(service).params['ExecStart'].scan(/path=(.+)[\s][;][\s]argv/).join
     describe service_path do
-      it { should_not match WEBSERVERROOT}
       it { should_not cmp '/'}
+    end
+    webserver_roots.each do |root|
+      describe service_path do
+        it { should_not match root}
+      end
     end
   end
 end

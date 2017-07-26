@@ -71,7 +71,7 @@ If the entry is not found, this is a finding."
   # START_DESCRIBE V-60707
   nginx_conf(NGINX_CONF_FILE).http.each do |http|
     describe http['ssl_protocols'] do
-      it { should cmp [['TLSv1 TLSv1.1 TLSv1.2']] }
+      it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
     end
   end
 

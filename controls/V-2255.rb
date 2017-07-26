@@ -96,7 +96,7 @@ control "V-2255" do
   should own the htpasswd file and permissions should be set to 550."
 
 # START_DESCRIBE V-2255
-  htpasswd = command('find / -name htpasswd').stdout.chomp
+  htpasswd = command('find / -name .htpasswd').stdout.chomp
   htpasswd.split.each do |htpwd|
     describe file(htpwd) do
       its('mode') { should cmp <= 0550 }

@@ -81,20 +81,17 @@ control "V-26326" do
     nginx_conf(NGINX_CONF_FILE).http.each do |http|
       if !http['server'].nil?
         http['server'].each do |server|
-          describe server['listen'] do
-            it { should_not be_nil}
-          end
           if !server['listen'].nil?
             server['listen'].each do |listen|
               describe.one do
-                describe listen.first do
+                describe listen.join do
                   it { should match %r([0-9]+(?:\.[0-9]+){3}:[0-9]+) }
                 end
-                describe listen.first do
+                describe listen.join do
                   it { should match %r([a-zA-Z]:[0-9]+) }
                 end
               end
-              describe listen.first.split(':').first do
+              describe listen.join.split(':').first do
                 it { should_not cmp '0.0.0.0' }
                 it { should_not cmp '[::ffff:0.0.0.0]' }
               end

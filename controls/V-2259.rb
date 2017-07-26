@@ -112,28 +112,77 @@ control "V-2259" do
 
   # START_DESCRIBE V-2259
 
-  configuration_files   = ['/usr/sbin/nginx',
-                          '/etc/nginx/',
-                          '/etc/nginx/conf.d',
-                          '/etc/nginx/modules',
-                          '/usr/share/nginx/html',
-                          '/var/log/nginx'
-                          ]
-
-  configuration_files.each do |directory|
-    describe.one do
-      describe file(directory) do
-        it { should be_owned_by SYS_ADMIN }
-        its('group') { should cmp SYS_ADMIN_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
-      describe file(directory) do
-        it { should be_owned_by NGINX_OWNER }
-        its('group') { should cmp NGINX_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
+  describe.one do
+    describe file('/usr/sbin/nginx') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 550 }
+    end
+    describe file('/usr/sbin/nginx') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 550 }
     end
   end
-
+  describe.one do
+    describe file('/etc/nginx/') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 770 }
+    end
+    describe file('/etc/nginx/') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 660 }
+    end
+  end
+  describe.one do
+    describe file('/etc/nginx/conf.d') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 770 }
+    end
+    describe file('/etc/nginx/conf.d') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 660 }
+    end
+  end
+  describe.one do
+    describe file('/etc/nginx/modules') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 770 }
+    end
+    describe file('/etc/nginx/modules') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 660 }
+    end
+  end
+  describe.one do
+    describe file('/usr/share/nginx/html') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 775 }
+    end
+    describe file('/usr/share/nginx/html') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 664 }
+    end
+  end
+  describe.one do
+    describe file('/var/log/nginx') do
+      it { should be_owned_by SYS_ADMIN }
+      its('group') { should cmp SYS_ADMIN_GROUP }
+      its('mode') { should cmp <= 750 }
+    end
+    describe file('/var/log/nginx') do
+      it { should be_owned_by NGINX_OWNER }
+      its('group') { should cmp NGINX_GROUP }
+      its('mode') { should cmp <= 640 }
+    end
+  end
   # STOP_DESCRIBE V-2259
 end

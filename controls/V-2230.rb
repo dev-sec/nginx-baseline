@@ -28,20 +28,8 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
-NGINX_HOME_DIRECTORY= attribute(
-  'nginx_home_directory',
-  description: 'Path for the nginx document directory',
-  default: "/home"
-)
-
-NGINX_DOCUMENT_DIRECTORY= attribute(
-  'nginx_document_directory',
-  description: 'Path for the nginx home directory',
-  default: "/usr/share/nginx/html"
-)
-
-NGINX_BACKUP_DIRECTORY= attribute(
-  'nginx_backup_directory',
+NGINX_BACKUP_REPOSITORY= attribute(
+  'nginx_backup_repository',
   description: 'Path for the nginx home directory',
   default: "/usr/share/nginx/html"
 )
@@ -94,7 +82,36 @@ control "V-2230" do
   tag "fix": "Ensure that CGI backup scripts are not left on the production
   web server."
 
-  dirs = [NGINX_HOME_DIRECTORY, NGINX_DOCUMENT_DIRECTORY,NGINX_BACKUP_DIRECTORY]
+  dirs = ['/home',NGINX_BACKUP_REPOSITORY]
+
+  # collect root directores from nginx_conf
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      if !http['root'].nil?
+        dirs.push(http['root'].join)
+      end
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['root'].nil?
+            dirs.push(server['root'].join)
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['root'].nil?
+                dirs.push(location['root'].join)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
 
   dirs.each do |dir|
     describe command("find #{dir} -name *.bak").stdout.chomp.split do

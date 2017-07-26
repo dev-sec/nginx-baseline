@@ -88,7 +88,7 @@ control "V-2251" do
 
   tag "fix": "Remove any unnecessary applications."
 
-  ps_list = command('ps -A').stdout.scan(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\s(.+)/).flatten
+  ps_list = command('ps -A').stdout.scan(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\s(.+)/).flatten.uniq
 
   describe ps_list do
     it { should be_in AUTHORIZED_PROCESS_LIST}

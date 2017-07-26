@@ -22,7 +22,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-require "ipaddr"
 
 DMZ_SUBNET= attribute(
   'dmz_subnet',
@@ -30,10 +29,10 @@ DMZ_SUBNET= attribute(
   default: '62.0.0.0/24'
 )
 
-SERVER_IP= attribute(
-  'server_ip',
-  description: 'IP address of the server',
-  default: '62.156.244.13'
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
 )
 
 only_if do
@@ -71,8 +70,34 @@ control "V-2243" do
   tag "fix": "Isolate the private web server from the public DMZ and separate
   it from the internal general population LAN."
 
-  describe IPAddr.new(DMZ_SUBNET)===IPAddr.new(SERVER_IP) do
-    it { should be false}
-  end
+  require "ipaddr"
 
+  # collect and test each listen IPs from nginx_conf
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['listen'].nil?
+            server['listen'].each do |listen|
+              describe.one do
+                describe listen.join do
+                  it { should match %r([0-9]+(?:\.[0-9]+){3}:[0-9]+) }
+                end
+                describe listen.join do
+                  it { should match %r([a-zA-Z]:[0-9]+) }
+                end
+              end
+              server_ip = listen.join.split(':').first
+              server_ip = server_ip.eql?('localhost') ? '127.0.0.1' : server_ip
+              if !server_ip.nil?
+                describe IPAddr.new(DMZ_SUBNET) === IPAddr.new(server_ip) do
+                  it { should be false}
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
 end

@@ -22,11 +22,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-
-WEBSERVERROOT = attribute(
-  'webserverroot',
-  description: 'Path to webserve root directory',
-  default: "/usr/share/nginx/html"
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
 )
 
 NGINX_OWNER = attribute(
@@ -89,6 +88,37 @@ control "V-26305" do
   file folder. "
 
   # START_DESCRIBE V-26305
+
+  # collect root directores from nginx_conf
+  webserver_roots = []
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      if !http['root'].nil?
+        webserver_roots.push(http['root'].join)
+      end
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['root'].nil?
+            webserver_roots.push(server['root'].join)
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['root'].nil?
+                webserver_roots.push(location['root'].join)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
   authorized_owner_list = [ NGINX_OWNER, SYS_ADMIN ]
   authorized_group_list = [ NGINX_GROUP, SYS_ADMIN_GROUP ]
 
@@ -98,8 +128,10 @@ control "V-26305" do
     its ('group') { should be_in authorized_group_list}
   end
 
-  describe nginx_conf(NGINX_CONF_FILE) do
-    its ('pid.join') { should_not match %r(#{WEBSERVERROOT})}
+  webserver_roots.each do |root|
+    describe nginx_conf(NGINX_CONF_FILE) do
+      its ('pid.join') { should_not match root}
+    end
   end
   # STOP_DESCRIBE V-26305
 

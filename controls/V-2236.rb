@@ -22,6 +22,12 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+DISALLOWED_COMPILER_LIST = attribute(
+  'disallowed_compiler_list',
+  description: "List of disallowed compilers",
+  default: ['gcc']
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -59,8 +65,10 @@ control "V-2236" do
   if removed, document the compiler installation with the ISSO/ISSM and ensure
   that the compiler is restricted to only administrative users."
 
-  describe package('gcc') do
-    it { should_not be_installed }
+  DISALLOWED_COMPILER_LIST.each do |compiler|
+    describe package(compiler) do
+      it { should_not be_installed }
+    end
   end
 
 end

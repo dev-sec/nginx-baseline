@@ -65,10 +65,11 @@ control "V-6724" do
   Note: The default value is set to on."
 
 # START_DESCRIBE V-6724
-
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['server_tokens'] do
-      it { should cmp [['off']] }
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      describe http['server_tokens'] do
+        it { should cmp [['off']] }
+      end
     end
   end
 

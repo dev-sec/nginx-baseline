@@ -28,10 +28,10 @@ SYS_ADMIN = attribute(
   default: 'root'
 )
 
-AUTHORIZED_USER_LIST= attribute(
-  'authorized_user_list',
-  description: 'List of privileged accounts',
-  default: [SYS_ADMIN]
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
 )
 
 only_if do
@@ -81,8 +81,13 @@ control "V-2247" do
   utilities."
 
   passwd.shells(/bash/).users.each do |account|
-    describe account do
-      it { should be_in AUTHORIZED_USER_LIST}
+    describe.one do
+      describe account do
+        it { should cmp SYS_ADMIN}
+      end
+      describe account do
+        it { should be_in NGINX_OWNER}
+      end
     end
   end
 

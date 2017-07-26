@@ -25,7 +25,13 @@ uri: http://iase.disa.mil
 NGINX_MIN_VER = attribute(
   'nginx_min_ver',
   description: 'Minimum Web vendor-supported version.',
-  default: '1.13.0'
+  default: '1.12.0'
+)
+
+NGINX_PATH= attribute(
+  'nginx_path',
+  description: 'Path for the nginx configuration file',
+  default: "/usr/sbin"
 )
 
 only_if do

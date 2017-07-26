@@ -23,11 +23,16 @@ uri: http://iase.disa.mil
 =end
 
 
-DOCUMENTED_NGINX_USER_LIST = attribute(
-  'documented_user_list',
-  description: "",
-  default: ['nginx',
-           ]
+SYS_ADMIN = attribute(
+  'sys_admin',
+  description: "The system adminstrator",
+  default: 'root'
+)
+
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
 )
 
 NGINX_CONF_FILE= attribute(
@@ -80,6 +85,7 @@ control "V-2257" do
   rights to the web server in the web site SOP or in an equivalent document."
 
   # STOP_DESCRIBE V-2257
+  DOCUMENTED_NGINX_USER_LIST = [NGINX_OWNER, SYS_ADMIN]
 
   describe nginx_conf(NGINX_CONF_FILE).user.flatten do
     it{ should be_in DOCUMENTED_NGINX_USER_LIST }

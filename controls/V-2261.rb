@@ -59,8 +59,8 @@ control "V-2261" do
 
 # START_DESCRIBE V-2261
 
-  describe host('localhost', port: 25, protocol: 'tcp') do
-    it { should_not be_reachable }
+  describe port(25) do
+    it { should_not be_listening }
   end
 
 # STOP_DESCRIBE V-2261
