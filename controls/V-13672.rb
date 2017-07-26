@@ -22,6 +22,12 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
+)
+
 control "V-13672" do
 
   title "The private web server must use an approved DoD certificate
@@ -66,5 +72,47 @@ control "V-13672" do
   tag "fix": "Configure DoD Private Web Servers to conduct certificate
   revocation checking utilizing certificate revocation lists (CRLs) or Online
   Certificate Status Protocol (OCSP)."
+
+  require 'time'
+
+  oscp_status = command('openssl s_client -connect login.live.com:443 -tls1  -tlsextdebug  -status 2>&1 < /dev/null').stdout
+
+  describe oscp_status do
+    it { should match %r(OCSP Response Status: successful)}
+  end
+
+  nginx_conf(NGINX_CONF_FILE).http.each do |http|
+    describe http['ssl_crl'] do
+      it { should_not be_nil }
+    end
+    describe file(http['ssl_crl'].join) do
+      it { should be_file }
+    end
+
+    DAYS_SINCE_CRL_UPDATE = ((Time.new - Time.at(file(http['ssl_crl'].join).mtime.to_f)) / 86400)
+    describe DAYS_SINCE_CRL_UPDATE do
+      it { should cmp < 7 }
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['ssl_crl'].nil?
+            describe http['ssl_crl'] do
+              it { should_not be_nil }
+            end
+            describe file(http['ssl_crl'].join) do
+              it { should be_file }
+            end
+            describe Date.parse(command("stat #{http['ssl_crl'].join}").stdout.scan(/Change:\s(.+)$/).join).mjd - Date.today.mjd do
+              it { should cmp < 7 }
+            end
+          end
+        end
+      end
+    end
+  end
 
 end

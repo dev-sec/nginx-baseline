@@ -108,9 +108,8 @@ control "V-2256" do
 
   access_control_files = [ ".htaccess",
                           ".htpasswd"]
-  system_directories = ['/',
-                        '/etc',
-                        '/bin']
+  system_directories = ['/sys']
+  
   configurable_directories = ['/usr/share/nginx/html']
 
   access_control_files.each do |file|

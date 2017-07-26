@@ -22,6 +22,19 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'Path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
+)
+
+DOD_APPROVED_PKIS= attribute(
+  'dod_approved_pkis',
+  description: 'DoD-approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners).',
+  default: ['DoD',
+            'ECA']
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -75,8 +88,44 @@ control "V-13620" do
   tag "fix": "Configure the web server’s trust store to trust only DoD-
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
 
-  only_if {
-    false
-  }
+  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+    ssl_client_certificate = http['ssl_client_certificate'].join
+    describe x509_certificate(ssl_client_certificate) do
+      it { should_not be_nil}
+      its('subject.C'){ should cmp 'US'}
+      its('subject.O'){ should cmp 'U.S. Government'}
+    end
+    describe.one do
+      DOD_APPROVED_PKIS.each do |pki|
+        describe x509_certificate(ssl_client_certificate) do
+          its('subject.CN'){ should match pki}
+        end
+      end
+    end
+  end
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['keepalive_timeout'].nil?
+            ssl_client_certificate = http['ssl_client_certificate'].join
+            describe x509_certificate(ssl_client_certificate) do
+              it { should_not be_nil}
+              its('subject.C'){ should cmp 'US'}
+              its('subject.O'){ should cmp 'U.S. Government'}
+            end
+            describe.one do
+              DOD_APPROVED_PKIS.each do |pki|
+                describe x509_certificate(ssl_client_certificate) do
+                  its('subject.CN'){ should match pki}
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
 
 end

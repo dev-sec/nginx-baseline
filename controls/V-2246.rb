@@ -25,7 +25,7 @@ uri: http://iase.disa.mil
 NGINX_MIN_VER = attribute(
   'nginx_min_ver',
   description: 'Minimum Web vendor-supported version.',
-  default: '1.13.0'
+  default: '1.12.0'
 )
 
 only_if do
