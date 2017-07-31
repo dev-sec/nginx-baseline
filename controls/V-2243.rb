@@ -85,11 +85,15 @@ control "V-2243" do
               end
               server_ip = listen.join.split(':').first
               server_ip = server_ip.eql?('localhost') ? '127.0.0.1' : server_ip
-              if !(IPAddr.new(str) rescue nil).nil?
+              if !(IPAddr.new(server_ip) rescue nil).nil?
                 describe IPAddr.new(DMZ_SUBNET) === IPAddr.new(server_ip) do
                   it { should be false}
                 end
               end
+            end
+          else
+            describe do
+              skip "Skipped: Listen tag not found."
             end
           end
         end
