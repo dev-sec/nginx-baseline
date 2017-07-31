@@ -119,18 +119,16 @@ control "V-26305" do
     end
   end
 
-  authorized_owner_list = [ NGINX_OWNER, SYS_ADMIN ]
-  authorized_group_list = [ NGINX_GROUP, SYS_ADMIN_GROUP ]
-
   describe file(nginx_conf(NGINX_CONF_FILE).pid.join) do
-    it { should exist}
-    its ('owner') { should be_in authorized_owner_list}
-    its ('group') { should be_in authorized_group_list}
+    it { should exist }
+    its ('owner') { should match %r(#{NGINX_OWNER}|#{SYS_ADMIN}) }
+    its ('group') { should match %r(#{NGINX_GROUP}|#{SYS_ADMIN_GROUP}) }
+    its('mode')  { should cmp <= 0660 }
   end
 
   webserver_roots.each do |root|
     describe nginx_conf(NGINX_CONF_FILE) do
-      its ('pid.join') { should_not match root}
+      its ('pid.join') { should_not match root }
     end
   end
   # STOP_DESCRIBE V-26305

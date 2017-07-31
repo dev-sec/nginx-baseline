@@ -81,13 +81,8 @@ control "V-2247" do
   utilities."
 
   passwd.shells(/bash/).users.each do |account|
-    describe.one do
-      describe account do
-        it { should cmp SYS_ADMIN}
-      end
-      describe account do
-        it { should be_in NGINX_OWNER}
-      end
+    describe account do
+      it { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
     end
   end
 

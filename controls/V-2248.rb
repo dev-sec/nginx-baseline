@@ -28,6 +28,30 @@ NGINX_CONF_FILE= attribute(
   default: "/etc/nginx/nginx.conf"
 )
 
+NGINX_OWNER = attribute(
+  'nginx_owner',
+  description: "The Nginx owner",
+  default: 'nginx'
+)
+
+SYS_ADMIN = attribute(
+  'sys_admin',
+  description: "The system adminstrator",
+  default: 'root'
+)
+
+NGINX_GROUP = attribute(
+  'nginx_group',
+  description: "The Nginx group",
+  default: 'nginx'
+)
+
+SYS_ADMIN_GROUP = attribute(
+  'sys_admin_group',
+  description: "The system adminstrator group",
+  default: 'root'
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -78,17 +102,10 @@ control "V-2248" do
   finding. "
 
   nginx_conf(NGINX_CONF_FILE).conf_files.each do |file|
-    describe.one do
-      describe file(file) do
-        it { should be_owned_by NGINX_OWNER }
-        its('group') { should cmp NGINX_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
-      describe file(file) do
-        it { should be_owned_by SYS_ADMIN }
-        its('group') { should cmp SYS_ADMIN_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
+    describe file(file) do
+      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+      its('mode')  { should cmp <= 0660 }
     end
   end
 

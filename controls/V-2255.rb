@@ -101,15 +101,15 @@ control "V-2255" do
     describe file(htpwd) do
       its('mode') { should cmp <= 0550 }
     end
-    describe.one do
-      describe file(htpwd) do
-        it { should be_owned_by NGINX_OWNER }
-        its('group') { should cmp NGINX_GROUP }
-      end
-      describe file(htpwd) do
-        it { should be_owned_by SYS_ADMIN }
-        its('group') { should cmp SYS_ADMIN_GROUP }
-      end
+    describe file(htpwd) do
+      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+    end
+  end
+
+  if htpasswd.empty?
+    describe do
+      skip "Skipped: htpasswd file not found"
     end
   end
 

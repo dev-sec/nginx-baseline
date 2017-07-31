@@ -52,9 +52,9 @@ SYS_ADMIN_GROUP = attribute(
   default: 'root'
 )
 
-only_if do
+only_if {
   command('nginx').exist?
-end
+}
 
 control "V-2259" do
 

@@ -73,23 +73,19 @@ control "V-2243" do
   require "ipaddr"
 
   # collect and test each listen IPs from nginx_conf
+
   if !nginx_conf(NGINX_CONF_FILE).http.nil?
     nginx_conf(NGINX_CONF_FILE).http.each do |http|
       if !http['server'].nil?
         http['server'].each do |server|
           if !server['listen'].nil?
             server['listen'].each do |listen|
-              describe.one do
-                describe listen.join do
-                  it { should match %r([0-9]+(?:\.[0-9]+){3}:[0-9]+) }
-                end
-                describe listen.join do
-                  it { should match %r([a-zA-Z]:[0-9]+) }
-                end
+              describe listen.join do
+                it { should match %r([0-9]+(?:\.[0-9]+){3}|[a-zA-Z]:[0-9]+) }
               end
               server_ip = listen.join.split(':').first
               server_ip = server_ip.eql?('localhost') ? '127.0.0.1' : server_ip
-              if !server_ip.nil?
+              if !(IPAddr.new(str) rescue nil).nil?
                 describe IPAddr.new(DMZ_SUBNET) === IPAddr.new(server_ip) do
                   it { should be false}
                 end

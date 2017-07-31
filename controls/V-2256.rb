@@ -109,79 +109,61 @@ control "V-2256" do
   access_control_files = [ '.htaccess',
                           '.htpasswd']
 
-  system_directories = ['/bin',
-                        '/dev',
-                        '/etc',
-                        '/lib',
-                        '/media',
-                        '/mnt',
-                        '/mnt/',
-                        '/proc',
-                        '/sbin',
-                        '/sys',
-                        '/tmp',
-                        '/usr',
-                        '/var',
-                        ]
-
-  configurable_directories = ['/usr/share/nginx/html']
-
   access_control_files.each do |file|
     file_path = command("find / -name #{file}").stdout.chomp
-    unless file_path.to_s.empty?
-      describe.one do
-        describe file(file_path) do
-          it { should be_owned_by NGINX_OWNER }
-          its('group') { should cmp NGINX_GROUP }
-          its('mode') { should cmp <= 0660 }
-        end
-        describe file(file_path) do
-          it { should be_owned_by SYS_ADMIN }
-          its('group') { should cmp SYS_ADMIN_GROUP }
-          its('mode') { should cmp <= 0660 }
-        end
+    file_path.split.each do |file|
+      describe file(file) do
+        its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+        its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+        its('mode')  { should cmp <= 0660 }
       end
     end
   end
 
   nginx_conf(NGINX_CONF_FILE).conf_files.each do |file|
-    describe.one do
-      describe file(file) do
-        it { should be_owned_by NGINX_OWNER }
-        its('group') { should cmp NGINX_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
-      describe file(file) do
-        it { should be_owned_by SYS_ADMIN }
-        its('group') { should cmp SYS_ADMIN_GROUP }
-        its('mode') { should cmp <= 0660 }
+    describe file(file) do
+      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+      its('mode')  { should cmp <= 0660 }
+    end
+  end
+
+  webserver_roots = []
+
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      if !http['root'].nil?
+        webserver_roots.push(http['root'].join)
       end
     end
   end
 
-  system_directories.each do |directory|
-    describe.one do
-      describe file(directory) do
-        it { should be_owned_by SYS_ADMIN }
-        its('group') { should cmp SYS_ADMIN_GROUP }
-        its('mode') { should cmp <= 0660 }
-      end
-      describe file(directory) do
-        it { should be_owned_by NGINX_OWNER }
-        its('group') { should cmp NGINX_GROUP }
-        its('mode') { should cmp <= 0660 }
+  if !nginx_conf(NGINX_CONF_FILE).http.nil?
+    nginx_conf(NGINX_CONF_FILE).http.each do |http|
+      if !http['server'].nil?
+        http['server'].each do |server|
+          if !server['root'].nil?
+            webserver_roots.push(server['root'].join)
+          end
+          if !server['location'].nil?
+            server['location'].each do |location|
+              if !location['root'].nil?
+                webserver_roots.push(location['root'].join)
+              end
+            end
+          end
+        end
       end
     end
   end
 
-  configurable_directories.each do |directory|
+  webserver_roots.each do |directory|
     describe file(directory) do
-      it { should be_owned_by NGINX_OWNER }
-      its('group') { should cmp NGINX_GROUP }
-      its('mode') { should cmp <= 0660 }
+      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+      its('sticky'){ should be true }
     end
   end
-
 # STOP_DESCRIBE V-2256
 
 end

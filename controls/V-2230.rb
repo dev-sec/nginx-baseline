@@ -112,6 +112,7 @@ control "V-2230" do
     end
   end
 
+  dirs.flatten!
 
   dirs.each do |dir|
     describe command("find #{dir} -name *.bak").stdout.chomp.split do
