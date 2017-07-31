@@ -91,6 +91,10 @@ control "V-26326" do
                 it { should_not cmp '[::ffff:0.0.0.0]' }
               end
             end
+          else
+            describe do
+              skip "Skipped: Listen tag not found."
+            end
           end
         end
       end

@@ -111,6 +111,13 @@ control "V-2256" do
 
   access_control_files.each do |file|
     file_path = command("find / -name #{file}").stdout.chomp
+
+    if file_path.empty?
+      describe do
+        skip "Skipped: Access control file #{file} not found"
+      end
+    end
+
     file_path.split.each do |file|
       describe file(file) do
         its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
@@ -125,6 +132,12 @@ control "V-2256" do
       its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
       its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
       its('mode')  { should cmp <= 0660 }
+    end
+  end
+
+  if nginx_conf(NGINX_CONF_FILE).conf_files.empty?
+    describe do
+      skip "Skipped: no conf files included."
     end
   end
 
@@ -162,6 +175,12 @@ control "V-2256" do
       its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
       its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
       its('sticky'){ should be true }
+    end
+  end
+
+  if webserver_roots.empty?
+    describe do
+      skip "Skipped: no web root directories found."
     end
   end
 # STOP_DESCRIBE V-2256

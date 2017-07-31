@@ -97,13 +97,15 @@ control "V-13672" do
     describe http['ssl_crl'] do
       it { should_not be_nil }
     end
-    describe file(http['ssl_crl'].join) do
-      it { should be_file }
-    end
+    if !http['ssl_crl'].nil?
+      describe file(http['ssl_crl'].join) do
+        it { should be_file }
+      end
 
-    DAYS_SINCE_CRL_UPDATE = ((Time.new - Time.at(file(http['ssl_crl'].join).mtime.to_f)) / 86400)
-    describe DAYS_SINCE_CRL_UPDATE do
-      it { should cmp < 7 }
+      DAYS_SINCE_CRL_UPDATE = ((Time.new - Time.at(file(http['ssl_crl'].join).mtime.to_f)) / 86400)
+      describe DAYS_SINCE_CRL_UPDATE do
+        it { should cmp < 7 }
+      end
     end
   end
 

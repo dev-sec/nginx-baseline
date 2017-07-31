@@ -83,6 +83,12 @@ DISALLOWED_SERVICES_LIST= attribute(
            ]
 )
 
+NGINX_CONF_FILE= attribute(
+  'nginx_conf_file',
+  description: 'define path for the nginx configuration file',
+  default: "/etc/nginx/nginx.conf"
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -184,6 +190,12 @@ control "V-6577" do
       describe service_path do
         it { should_not match root}
       end
+    end
+  end
+
+  if services.empty?
+    describe do
+      skip "Skipped: no services found."
     end
   end
 end

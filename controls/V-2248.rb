@@ -109,4 +109,9 @@ control "V-2248" do
     end
   end
 
+  if nginx_conf(NGINX_CONF_FILE).conf_files.empty?
+    describe do
+      skip "Skipped: no conf files included."
+    end
+  end
 end

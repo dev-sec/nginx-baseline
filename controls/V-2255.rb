@@ -109,7 +109,7 @@ control "V-2255" do
 
   if htpasswd.empty?
     describe do
-      skip "Skipped: htpasswd file not found"
+      skip "Skipped: .htpasswd file not found"
     end
   end
 

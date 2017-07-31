@@ -80,10 +80,15 @@ control "V-2247" do
   directory tree, the shell, or other operating system functions and
   utilities."
 
-  passwd.shells(/bash/).users.each do |account|
+  users.shells(/bash/).usernames.each do |account|
     describe account do
       it { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
     end
   end
 
+  if users.shells(/bash/).usernames.empty?
+    describe do
+      skip "Skipped: no users found with shell acccess."
+    end
+  end
 end

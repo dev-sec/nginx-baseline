@@ -94,4 +94,9 @@ control "V-2251" do
     it { should be_in AUTHORIZED_PROCESS_LIST}
   end
 
+  if ps_list.empty?
+    describe do
+      skip "Skipped: no processes parsed."
+    end
+  end
 end
