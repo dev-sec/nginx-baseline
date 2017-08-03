@@ -110,16 +110,5 @@ control "V-13621" do
     end
   end
 
-  if NGINX_EXCEPTION_FILES.empty?
-    describe do
-      skip "Skipped: nginx disallowed file list empty"
-    end
-  end
-
-  if NGINX_DISALLOWED_FILE_LIST.empty?
-    describe do
-      skip "Skipped: nginx disallowed file list empty."
-    end
-  end
   # STOP_DESCRIBE V-13621
 end

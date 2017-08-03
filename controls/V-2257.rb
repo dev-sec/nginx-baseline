@@ -85,10 +85,9 @@ control "V-2257" do
   rights to the web server in the web site SOP or in an equivalent document."
 
   # STOP_DESCRIBE V-2257
-  DOCUMENTED_NGINX_USER_LIST = [NGINX_OWNER, SYS_ADMIN]
 
   describe nginx_conf(NGINX_CONF_FILE).user.flatten do
-    it{ should be_in DOCUMENTED_NGINX_USER_LIST }
+    it{ should match %r(#{SYS_ADMIN}|#{NGINX_OWNER})}
   end
 
   # STOP_DESCRIBE V-2257

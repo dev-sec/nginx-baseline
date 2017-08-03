@@ -114,9 +114,6 @@ control "V-13672" do
       if !http['server'].nil?
         http['server'].each do |server|
           if !server['ssl_crl'].nil?
-            describe http['ssl_crl'] do
-              it { should_not be_nil }
-            end
             describe file(http['ssl_crl'].join) do
               it { should be_file }
             end
