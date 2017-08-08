@@ -88,21 +88,21 @@ control "V-13620" do
   tag "fix": "Configure the web server’s trust store to trust only DoD-
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
 
-    # nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    #   ssl_client_certificate = http['ssl_client_certificate'].join
-    #   describe x509_certificate(ssl_client_certificate) do
-    #     it { should_not be_nil}
-    #     its('subject.C'){ should cmp 'US'}
-    #     its('subject.O'){ should cmp 'U.S. Government'}
-    #   end
-    #   describe.one do
-    #     DOD_APPROVED_PKIS.each do |pki|
-    #       describe x509_certificate(ssl_client_certificate) do
-    #         its('subject.CN'){ should match pki}
-    #       end
-    #     end
-    #   end
-    # end
+    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
+      ssl_client_certificate = http['ssl_client_certificate'].join
+      describe x509_certificate(ssl_client_certificate) do
+        it { should_not be_nil}
+        its('subject.C'){ should cmp 'US'}
+        its('subject.O'){ should cmp 'U.S. Government'}
+      end
+      describe.one do
+        DOD_APPROVED_PKIS.each do |pki|
+          describe x509_certificate(ssl_client_certificate) do
+            its('subject.CN'){ should match pki}
+          end
+        end
+      end
+    end
 
   if !nginx_conf(NGINX_CONF_FILE).http.nil?
     nginx_conf(NGINX_CONF_FILE).http.each do |http|

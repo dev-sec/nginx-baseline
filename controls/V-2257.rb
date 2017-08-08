@@ -86,8 +86,10 @@ control "V-2257" do
 
   # STOP_DESCRIBE V-2257
 
+  DOCUMENTED_ADMINS = [SYS_ADMIN, NGINX_OWNER]
+
   describe nginx_conf(NGINX_CONF_FILE).user.flatten do
-    it{ should match %r(#{SYS_ADMIN}|#{NGINX_OWNER})}
+    it{ should be_in DOCUMENTED_ADMINS}
   end
 
   # STOP_DESCRIBE V-2257

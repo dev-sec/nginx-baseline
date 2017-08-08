@@ -33,7 +33,7 @@ only_if do
 end
 
 control "V-13732" do
-  title "The ""disable_symlinks"" setting must be disabled."
+  title "The ""disable_symlinks"" setting must be on."
   desc "The disable_symlinks directive determines how symbolic links should be
   treated when opening files.A symbolic link allows a file or a directory to
   be referenced using a symbolic name raising a potential hazard if symbolic

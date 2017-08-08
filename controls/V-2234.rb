@@ -42,7 +42,7 @@ control "V-2234" do
   between public web servers and assets located within the internal network.
   "
 
-  impact 0.5
+  impact 0.0
   tag "severity": "medium"
   tag "gtitle": "WG040"
   tag "gid": "V-2234"
