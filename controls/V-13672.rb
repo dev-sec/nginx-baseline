@@ -87,6 +87,7 @@ control "V-13672" do
 
   require 'time'
 
+  #@todo complete ocsp verification test
   # oscp_status = command("openssl s_client -connect #{OCSP_SERVER} -tls1  -tlsextdebug  -status 2>&1 < /dev/null").stdout
   #
   # describe oscp_status do
