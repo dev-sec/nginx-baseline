@@ -102,12 +102,12 @@ control "V-26285" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26285
-  describe nginx_module( nginx_path: NGINX_PATH ) do
-    its('loaded_modules') { should be_in NGINX_AUTHORIZED_MODULES }
+  describe nginx do
+    its('modules') { should be_in NGINX_AUTHORIZED_MODULES }
   end
 
-  describe nginx_module( nginx_path: NGINX_PATH ).loaded_modules do
-    it { should_not be_in NGINX_UNAUTHORIZED_MODULES }
+  describe nginx do
+    its('modules') { should_not be_in NGINX_UNAUTHORIZED_MODULES }
   end
   # STOP_DESCRIBE V-26285
 

@@ -50,15 +50,6 @@ only_if do
   package('nginx').installed?
 end
 
-options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
-}
-
-options_add_header = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
-}
-
 control "V-2255" do
 
   title "The web server’s htpasswd files (if present) must reflect proper

@@ -70,8 +70,8 @@ control "V-26299" do
   modules using the --without {module_name} option to reject unneeded modules."
 
   # START_DESCRIBE V-26299
-  describe nginx_module(nginx_path:NGINX_PATH, module_name:'ngx_http_proxy') do
-    it { should_not be_loaded }
+  describe nginx do
+    its('modules') { should_not include 'ngx_http_proxy' }
   end
   # STOP_DESCRIBE V-26299
 end
