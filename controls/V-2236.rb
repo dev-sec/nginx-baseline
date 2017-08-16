@@ -25,7 +25,7 @@ uri: http://iase.disa.mil
 DISALLOWED_COMPILER_LIST = attribute(
   'disallowed_compiler_list',
   description: "List of disallowed compilers",
-  default: ['gcc']
+  default: []
 )
 
 only_if do
@@ -64,6 +64,15 @@ control "V-2236" do
   production environment or the compiler is embedded and will break the suite
   if removed, document the compiler installation with the ISSO/ISSM and ensure
   that the compiler is restricted to only administrative users."
+
+
+  yum_compiler_list = command('yum search all compiler').stdout.scan(/^(\S+)\s:\s/).flatten
+
+  yum_compiler_list.each do |compiler|
+    describe package(compiler) do
+      it { should_not be_installed }
+    end
+  end
 
   DISALLOWED_COMPILER_LIST.each do |compiler|
     describe package(compiler) do

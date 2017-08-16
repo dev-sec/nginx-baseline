@@ -47,7 +47,7 @@ SYS_ADMIN_GROUP = attribute(
 )
 
 only_if do
-  package('nginx').installed?
+  command('nginx').exist?
 end
 
 control "V-2255" do
