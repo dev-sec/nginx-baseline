@@ -26,7 +26,7 @@ uri: http://iase.disa.mil
 NGINX_MIN_VER = attribute(
   'nginx_min_ver',
   description: 'Minimum Web vendor-supported version.',
-  default: '1.13.0'
+  default: '1.12.0'
 )
 
 NGINX_PATH= attribute(
@@ -63,7 +63,7 @@ control "V-2246" do
   If the version of nginx is not at the following version or higher, this is a
   finding.
 
-  nginx version: nginx/1.13.0
+  nginx version: nginx/1.12.0
 
   Note: In some situations, the nginx software that is being used is supported
   by another vendor, such as nginx.com.  The versions of the software in these
