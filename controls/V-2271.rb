@@ -25,7 +25,7 @@ uri: http://iase.disa.mil
 MONITORINGSOFTWARE = attribute(
   'monitoring_software',
   description: "Monitoring software for CGI or equivalent programs",
-  default: 'auditd'
+  default: 'audit'
 )
 
 only_if do

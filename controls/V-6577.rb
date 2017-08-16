@@ -71,7 +71,8 @@ ALLOWED_SERVICES_LIST= attribute(
             'systemd-update-utmp-runlevel',
             'systemd-update-utmp',
             'systemd-user-sessions',
-            'systemd-vconsole-setup']
+            'systemd-vconsole-setup',
+            'auditd']
 )
 
 DISALLOWED_SERVICES_LIST= attribute(
