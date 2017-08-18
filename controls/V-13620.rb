@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-require_relative '../libraries/nginx_conf'
+# require_relative '../libraries/nginx_conf'
 
 NGINX_CONF_FILE= attribute(
   'nginx_conf_file',
