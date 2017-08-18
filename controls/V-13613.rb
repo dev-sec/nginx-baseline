@@ -49,7 +49,7 @@ control "V-13613" do
   software. Security patches are deemed applicable if the product is installed,
   even if it is not used or is disabled.  "
 
-  impact 0.0
+  impact 0.5
   tag "severity": "medium"
   tag "gtitle": "WA230"
   tag "gid": "V-13613"
