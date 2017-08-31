@@ -110,7 +110,7 @@ control "V-13620" do
     nginx_conf(NGINX_CONF_FILE).http.each do |http|
       if !http['server'].nil?
         http['server'].each do |server|
-          if !server['keepalive_timeout'].nil?
+          if !server['ssl_client_certificate'].nil?
             ssl_client_certificate = http['ssl_client_certificate'].join
             describe x509_certificate(ssl_client_certificate) do
               it { should_not be_nil}
@@ -129,5 +129,4 @@ control "V-13620" do
       end
     end
   end
-
 end
