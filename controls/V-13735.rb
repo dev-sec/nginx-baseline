@@ -76,19 +76,21 @@ control "V-13735" do
   random_index off;"
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['autoindex'] do
         it { should cmp [['off']] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['autoindex'] do
         it { should cmp [['off']] }
       end unless server.params['autoindex'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       describe location.params['autoindex'] do
         it { should cmp [['off']] }
       end unless location.params['autoindex'].nil?

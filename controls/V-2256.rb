@@ -107,6 +107,8 @@ control "V-2256" do
   begin
     access_control_files = [ '.htaccess',
                             '.htpasswd']
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+    nginx_conf_handle.params
 
     access_control_files.each do |file|
       file_path = command("find / -name #{file}").stdout.chomp
@@ -125,10 +127,8 @@ control "V-2256" do
         end
       end
     end
-    nginx_handle = nginx_conf(NGINX_CONF_FILE)
-    nginx_handle.params
 
-    nginx_handle.contents.keys.each do |file|
+    nginx_conf_handle.contents.keys.each do |file|
       describe file(file) do
         its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
         its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
@@ -136,7 +136,7 @@ control "V-2256" do
       end
     end
 
-    if nginx_handle.contents.keys.empty?
+    if nginx_conf_handle.contents.keys.empty?
       describe do
         skip "Skipped: no conf files included."
       end
@@ -144,15 +144,15 @@ control "V-2256" do
 
     webserver_roots = []
 
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle.http.entries.each do |http|
       webserver_roots.push(http.params['root']) unless http.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       webserver_roots.push(server.params['root']) unless server.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       webserver_roots.push(location.params['root']) unless location.params['root'].nil?
     end
 

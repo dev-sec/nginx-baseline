@@ -144,16 +144,17 @@ control "V-6577" do
   begin
     # collect root directores from nginx_conf
     webserver_roots = []
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
 
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle.http.entries.each do |http|
       webserver_roots.push(http.params['root']) unless http.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       webserver_roots.push(server.params['root']) unless server.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       webserver_roots.push(location.params['root']) unless location.params['root'].nil?
     end
 

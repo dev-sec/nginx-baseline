@@ -89,30 +89,31 @@ control "V-26305" do
 
   begin
     webserver_roots = []
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
 
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle.http.entries.each do |http|
       webserver_roots.push(http.params['root']) unless http.params['root'].nil?
     end
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       webserver_roots.push(server.params['root']) unless server.params['root'].nil?
     end
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       webserver_roots.push(location.params['root']) unless location.params['root'].nil?
     end
 
     webserver_roots.flatten!.uniq!
 
-    describe file(nginx_conf(NGINX_CONF_FILE).params['pid'].join) do
+    describe file(nginx_conf_handle.params['pid'].join) do
       it { should exist }
       its ('owner') { should match %r(#{NGINX_OWNER}|#{SYS_ADMIN}) }
       its ('group') { should match %r(#{NGINX_GROUP}|#{SYS_ADMIN_GROUP}) }
       its ('mode')  { should cmp <= 0660 }
-    end unless nginx_conf(NGINX_CONF_FILE).params['pid'].nil?
+    end unless nginx_conf_handle.params['pid'].nil?
 
     webserver_roots.each do |root|
-      describe nginx_conf(NGINX_CONF_FILE).params['pid'].join do
+      describe nginx_conf_handle.params['pid'].join do
         it { should_not match root }
-      end unless nginx_conf(NGINX_CONF_FILE).params['pid'].nil?
+      end unless nginx_conf_handle.params['pid'].nil?
     end
 
   rescue Exception => msg

@@ -84,16 +84,17 @@ control "V-2230" do
 
   begin
     dirs = ['/home',NGINX_BACKUP_REPOSITORY]
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
 
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle.http.entries.each do |http|
       dirs.push(http.params['root']) unless http.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       dirs.push(server.params['root']) unless server.params['root'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       dirs.push(location.params['root']) unless location.params['root'].nil?
     end
 

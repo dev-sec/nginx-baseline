@@ -64,13 +64,15 @@ control "V-13737" do
   large_client_header_buffers to 2 buffers and 1k."
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['large_client_header_buffers'] do
         it { should cmp [['2','1k']] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['large_client_header_buffers'] do
         it { should cmp [['2','1k']] }
       end unless server.params['large_client_header_buffers'].nil?

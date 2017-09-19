@@ -102,10 +102,10 @@ control "V-2248" do
   finding. "
 
   begin
-    nginx_handle = nginx_conf(NGINX_CONF_FILE)
-    nginx_handle.params
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+    nginx_conf_handle.params
 
-    nginx_handle.contents.keys.each do |file|
+    nginx_conf_handle.contents.keys.each do |file|
       describe file(file) do
         its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
         its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
@@ -113,7 +113,7 @@ control "V-2248" do
       end
     end
 
-    if nginx_handle.contents.keys.empty?
+    if nginx_conf_handle.contents.keys.empty?
       describe do
         skip "Skipped: no conf files included."
       end

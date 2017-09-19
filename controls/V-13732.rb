@@ -69,19 +69,21 @@ control "V-13732" do
   disable_symlinks   on;"
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['disable_symlinks'] do
         it { should cmp [['on']] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['disable_symlinks'] do
         it { should cmp [['on']] }
       end unless server.params['disable_symlinks'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       describe location.params['disable_symlinks'] do
         it { should cmp [['on']] }
       end unless location.params['disable_symlinks'].nil?

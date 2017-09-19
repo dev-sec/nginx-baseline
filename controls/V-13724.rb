@@ -81,7 +81,9 @@ control "V-13724" do
   client_header_timeout 10s;"
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['client_header_timeout'] do
         it { should_not be_nil}
       end
@@ -97,7 +99,7 @@ control "V-13724" do
       end unless http.params['client_body_timeout'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['client_header_timeout'].flatten do
         it { should cmp <= 10 }
       end unless server.params['client_header_timeout'].nil?

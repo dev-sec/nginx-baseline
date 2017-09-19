@@ -99,7 +99,9 @@ control "V-13672" do
       ((Time.new - Time.at(file(cert).mtime.to_f)) / 86400)
     end
 
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['ssl_crl'] do
         it { should_not be_nil}
       end
@@ -113,7 +115,7 @@ control "V-13672" do
       end unless http.params['ssl_crl'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       server.params['ssl_crl'].each do |cert|
         describe file(cert.join) do
           it { should be_file }

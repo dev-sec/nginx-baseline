@@ -69,7 +69,9 @@ control "V-13736" do
   and client_max_body_size to 100k or less."
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['client_body_buffer_size'] do
         it { should_not be_nil}
       end
@@ -85,7 +87,7 @@ control "V-13736" do
       end unless http.params['client_max_body_size'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['client_body_buffer_size'].join.to_i do
         it { should cmp <= '100k'.to_i }
       end unless server.params['client_body_buffer_size'].nil?
@@ -95,7 +97,7 @@ control "V-13736" do
       end unless server.params['client_max_body_size'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       describe location.params['client_body_buffer_size'].join.to_i do
         it { should cmp <= '100k'.to_i }
       end unless location.params['client_body_buffer_size'].nil?

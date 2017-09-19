@@ -74,19 +74,21 @@ control "V-13726" do
   keepalive_timeout   5 5;"
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['keepalive_timeout'] do
         it { should cmp [['5', '5']] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['keepalive_timeout'] do
         it { should cmp [['5', '5']] }
       end unless server.params['keepalive_timeout'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       describe location.params['keepalive_timeout'] do
         it { should cmp [['5', '5']] }
       end unless location.params['keepalive_timeout'].nil?

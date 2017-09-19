@@ -89,7 +89,9 @@ control "V-13620" do
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['ssl_client_certificate'] do
         it { should_not be_nil}
       end
@@ -105,7 +107,7 @@ control "V-13620" do
       end unless http.params['ssl_client_certificate'].nil?
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       server.params['ssl_client_certificate'].each do |cert|
         describe x509_certificate(cert.join) do
           it { should_not be_nil}

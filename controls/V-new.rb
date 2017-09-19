@@ -69,13 +69,15 @@ If the entry is not found, this is a finding."
   "
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['ssl_protocols'] do
         it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['ssl_protocols'] do
         it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
       end unless server.params['ssl_protocols'].nil?

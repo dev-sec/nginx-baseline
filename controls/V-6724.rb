@@ -65,13 +65,15 @@ control "V-6724" do
   Note: The default value is set to on."
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['server_tokens'] do
         it { should cmp [['off']] }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe.one do
         describe server.params['server_tokens'] do
           it { should be nil }
@@ -81,7 +83,7 @@ control "V-6724" do
         end
       end
     end
-    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+    nginx_conf_handle.locations.entries.each do |location|
       describe.one do
         describe location.params['server_tokens'] do
           it { should be nil }

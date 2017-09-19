@@ -64,13 +64,15 @@ control "V-13738" do
   to 1k or less."
 
   begin
-    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+    nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
+
+    nginx_conf_handle.http.entries.each do |http|
       describe http.params['client_header_buffer_size'].join.to_i do
         it { should cmp <= '1k'.to_i }
       end
     end
 
-    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+    nginx_conf_handle.servers.entries.each do |server|
       describe server.params['client_header_buffer_size'].join.to_i do
         it { should cmp <= '1k'.to_i }
       end unless server.params['client_header_buffer_size'].nil?
