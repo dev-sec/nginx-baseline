@@ -67,9 +67,12 @@ control "V-13738" do
     nginx_conf_handle = nginx_conf(NGINX_CONF_FILE)
 
     nginx_conf_handle.http.entries.each do |http|
+      describe http.params['client_header_buffer_size'] do
+        it { should_not be_nil}
+      end
       describe http.params['client_header_buffer_size'].join.to_i do
         it { should cmp <= '1k'.to_i }
-      end
+      end unless http.params['client_header_buffer_size'].nil?
     end
 
     nginx_conf_handle.servers.entries.each do |server|

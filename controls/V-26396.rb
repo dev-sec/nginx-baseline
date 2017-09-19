@@ -85,7 +85,7 @@ control "V-26396" do
             its(['_']) { should cmp ["($request_method", "!~", "^(GET|PUT|POST)$", ")"]}
             its(['return']) { should cmp [["444"]]}
           end
-        end
+        end unless location.params['if'].nil?
       end
     end
   rescue Exception => msg
