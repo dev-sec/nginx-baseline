@@ -94,21 +94,24 @@ control "V-13621" do
   only allow access to authorized users. If any sample files are found on the
   web server, this is a finding."
 
-  # START_DESCRIBE V-13621
-  NGINX_DISALLOWED_FILE_LIST.each do |file|
-    describe file(file) do
-      it { should_not exist }
+  begin
+    NGINX_DISALLOWED_FILE_LIST.each do |file|
+      describe file(file) do
+        it { should_not exist }
+      end
+    end
+
+    NGINX_EXCEPTION_FILES.each do |file|
+      describe file(file) do
+        it { should exist }
+        it { should be_owned_by NGINX_OWNER }
+        it { should be_grouped_into NGINX_GROUP }
+        its('mode') { should cmp '640' }
+      end
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
-  NGINX_EXCEPTION_FILES.each do |file|
-    describe file(file) do
-      it { should exist }
-      it { should be_owned_by NGINX_OWNER }
-      it { should be_grouped_into NGINX_GROUP }
-      its('mode') { should cmp '640' }
-    end
-  end
-
-  # STOP_DESCRIBE V-13621
 end

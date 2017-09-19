@@ -57,12 +57,16 @@ control "V-2261" do
   tag "fix": "Configure the email application to not allow incoming connections."
 
 
-# START_DESCRIBE V-2261
-
-  describe port(25) do
-    it { should_not be_listening }
+  begin
+    describe port(25) do
+      it { should_not be_listening }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
 
-# STOP_DESCRIBE V-2261
+
 
 end

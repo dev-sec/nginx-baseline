@@ -104,85 +104,78 @@ control "V-2256" do
   however, the group permissions represent those of the user accessing the web
   site that must execute the directives in .htacces."
 
-# START_DESCRIBE V-2256
+  begin
+    access_control_files = [ '.htaccess',
+                            '.htpasswd']
 
-  access_control_files = [ '.htaccess',
-                          '.htpasswd']
+    access_control_files.each do |file|
+      file_path = command("find / -name #{file}").stdout.chomp
 
-  access_control_files.each do |file|
-    file_path = command("find / -name #{file}").stdout.chomp
+      if file_path.empty?
+        describe do
+          skip "Skipped: Access control file #{file} not found"
+        end
+      end
 
-    if file_path.empty?
-      describe do
-        skip "Skipped: Access control file #{file} not found"
+      file_path.split.each do |file|
+        describe file(file) do
+          its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+          its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+          its('mode')  { should cmp <= 0660 }
+        end
       end
     end
+    nginx_handle = nginx_conf(NGINX_CONF_FILE)
+    nginx_handle.params
 
-    file_path.split.each do |file|
+    nginx_handle.contents.keys.each do |file|
       describe file(file) do
         its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
         its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
         its('mode')  { should cmp <= 0660 }
       end
     end
-  end
 
-  nginx_conf(NGINX_CONF_FILE).conf_files.each do |file|
-    describe file(file) do
-      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
-      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
-      its('mode')  { should cmp <= 0660 }
-    end
-  end
-
-  if nginx_conf(NGINX_CONF_FILE).conf_files.empty?
-    describe do
-      skip "Skipped: no conf files included."
-    end
-  end
-
-  webserver_roots = []
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      if !http['root'].nil?
-        webserver_roots.push(http['root'].join)
+    if nginx_handle.contents.keys.empty?
+      describe do
+        skip "Skipped: no conf files included."
       end
     end
-  end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['root'].nil?
-            webserver_roots.push(server['root'].join)
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['root'].nil?
-                webserver_roots.push(location['root'].join)
-              end
-            end
-          end
-        end
+    webserver_roots = []
+
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      webserver_roots.push(http.params['root']) unless http.params['root'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      webserver_roots.push(server.params['root']) unless server.params['root'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      webserver_roots.push(location.params['root']) unless location.params['root'].nil?
+    end
+
+    webserver_roots.flatten!.uniq!
+
+    webserver_roots.each do |directory|
+      describe file(directory) do
+        its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+        its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+        its('sticky'){ should be true }
       end
     end
-  end
 
-  webserver_roots.each do |directory|
-    describe file(directory) do
-      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
-      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
-      its('sticky'){ should be true }
+    if webserver_roots.empty?
+      describe do
+        skip "Skipped: no web root directories found."
+      end
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
-  if webserver_roots.empty?
-    describe do
-      skip "Skipped: no web root directories found."
-    end
-  end
-# STOP_DESCRIBE V-2256
 
 end

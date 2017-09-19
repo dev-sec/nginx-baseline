@@ -84,14 +84,17 @@ control "V-2257" do
   tag "fix": "Document the administrative users and groups which have access
   rights to the web server in the web site SOP or in an equivalent document."
 
-  # STOP_DESCRIBE V-2257
+  begin
+    DOCUMENTED_ADMINS = [SYS_ADMIN, NGINX_OWNER]
 
-  DOCUMENTED_ADMINS = [SYS_ADMIN, NGINX_OWNER]
+    describe nginx_conf(NGINX_CONF_FILE).params['user'].flatten do
+      it{ should be_in DOCUMENTED_ADMINS}
+    end
 
-  describe nginx_conf(NGINX_CONF_FILE).user.flatten do
-    it{ should be_in DOCUMENTED_ADMINS}
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-
-  # STOP_DESCRIBE V-2257
 
 end

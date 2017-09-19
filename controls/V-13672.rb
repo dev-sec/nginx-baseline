@@ -85,46 +85,48 @@ control "V-13672" do
   revocation checking utilizing certificate revocation lists (CRLs) or Online
   Certificate Status Protocol (OCSP)."
 
-  require 'time'
+  begin
+    require 'time'
 
-  #@todo complete ocsp verification test
-  # oscp_status = command("openssl s_client -connect #{OCSP_SERVER} -tls1  -tlsextdebug  -status 2>&1 < /dev/null").stdout
-  #
-  # describe oscp_status do
-  #   it { should match %r(OCSP Response Status: successful)}
-  # end
+    #@todo complete ocsp verification test
+    # oscp_status = command("openssl s_client -connect #{OCSP_SERVER} -tls1  -tlsextdebug  -status 2>&1 < /dev/null").stdout
+    #
+    # describe oscp_status do
+    #   it { should match %r(OCSP Response Status: successful)}
+    # end
 
-  nginx_conf(NGINX_CONF_FILE).http.each do |http|
-    describe http['ssl_crl'] do
-      it { should_not be_nil }
+    def days_since_crl_update(cert)
+      ((Time.new - Time.at(file(cert).mtime.to_f)) / 86400)
     end
-    if !http['ssl_crl'].nil?
-      describe file(http['ssl_crl'].join) do
-        it { should be_file }
-      end
 
-      DAYS_SINCE_CRL_UPDATE = ((Time.new - Time.at(file(http['ssl_crl'].join).mtime.to_f)) / 86400)
-      describe DAYS_SINCE_CRL_UPDATE do
-        it { should cmp < 7 }
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['ssl_crl'] do
+        it { should_not be_nil}
       end
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['ssl_crl'].nil?
-            describe file(http['ssl_crl'].join) do
-              it { should be_file }
-            end
-            describe Date.parse(command("stat #{http['ssl_crl'].join}").stdout.scan(/Change:\s(.+)$/).join).mjd - Date.today.mjd do
-              it { should cmp < CRL_UDPATE_FREQUENCY }
-            end
-          end
+      http.params['ssl_crl'].each do |cert|
+        describe file(cert.join) do
+          it { should be_file }
         end
-      end
+        describe days_since_crl_update(cert.join) do
+          it { should cmp < CRL_UDPATE_FREQUENCY }
+        end
+      end unless http.params['ssl_crl'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      server.params['ssl_crl'].each do |cert|
+        describe file(cert.join) do
+          it { should be_file }
+        end
+        describe days_since_crl_update(cert.join) do
+          it { should cmp < CRL_UDPATE_FREQUENCY }
+        end
+      end unless server.params['ssl_crl'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
 end

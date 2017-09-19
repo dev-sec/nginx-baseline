@@ -72,56 +72,26 @@ control "V-26396" do
   ## In this case, it does not accept other HTTP methods such as HEAD, DELETE,
   SEARCH, TRACE ##
 "
-  # START_DESCRIBE V-26396
-  # if !nginx_conf(NGINX_CONF_FILE).http.nil?
-  #   nginx_conf(NGINX_CONF_FILE).http.each do |http|
-  #     if !http['server'].nil?
-  #       http['server'].each do |server|
-  #         describe server['if'] do
-  #           it { should_not be_nil}
-  #         end
-  #         if !server['if'].nil?
-  #           server['if'].each do |ifcondition|
-  #             # TODO: Fix nginx_conf 'if'resouce bug and fix test accordingly, current test works
-  #             describe ifcondition['_'].join do
-  #               it { should cmp '($request_method!~^(GET|PUT|POST)$)'}
-  #             end
-  #             describe ifcondition['return'].join do
-  #               it { should cmp '444'}
-  #             end
-  #           end
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['location'].nil?
-            server['location'].each do |location|
-              describe location['if'] do
-                it { should_not be_nil}
-              end
-              if !location['if'].nil?
-                location['if'].each do |ifcondition|
-                  # TODO: Fix nginx_conf 'if'resouce bug and fix test accordingly, current test works
-                  describe ifcondition['_'].join do
-                    it { should cmp '($request_method!~^(GET|PUT|POST)$)'}
-                  end
-                  describe ifcondition['return'].join do
-                    it { should cmp '444'}
-                  end
-                end
-              end
-            end
+  begin
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      unless location.params["_"].eql?(["/"])
+        describe location.params['if'] do
+          it { should_not be_nil}
+        end
+        location.params['if'].each do |ifcondition|
+          describe ifcondition do
+            it { should_not be_nil}
+            its(['_']) { should cmp ["($request_method", "!~", "^(GET|PUT|POST)$", ")"]}
+            its(['return']) { should cmp [["444"]]}
           end
         end
       end
     end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-26396
 
 end

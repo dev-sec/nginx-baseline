@@ -65,9 +65,13 @@ control "V-26368" do
   Use the configure script (available in the nginx download package) to exclude
   modules using the --without {module_name} option to reject unneeded modules."
 
-  # START_DESCRIBE V-26368
-  describe nginx do
-    its('modules') { should_not include 'ngx_autoindex' }
+  begin
+    describe nginx do
+      its('modules') { should_not include 'ngx_autoindex' }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-26368
 end

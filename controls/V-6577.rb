@@ -141,62 +141,55 @@ control "V-6577" do
   Confirm that the additional service or application is not installed on the
   same partition as the operating systems root directory or the web document
   root. If it is, this is a finding."
+  begin
+    # collect root directores from nginx_conf
+    webserver_roots = []
 
-  # collect root directores from nginx_conf
-  webserver_roots = []
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      if !http['root'].nil?
-        webserver_roots.push(http['root'].join)
-      end
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      webserver_roots.push(http.params['root']) unless http.params['root'].nil?
     end
-  end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['root'].nil?
-            webserver_roots.push(server['root'].join)
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['root'].nil?
-                webserver_roots.push(location['root'].join)
-              end
-            end
-          end
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      webserver_roots.push(server.params['root']) unless server.params['root'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      webserver_roots.push(location.params['root']) unless location.params['root'].nil?
+    end
+
+    webserver_roots.flatten!.uniq!
+
+    services = command('systemctl -r --type service --all').stdout.scan(/^\s\s(.+).service/).flatten
+
+    describe services do
+      it{ should be_in ALLOWED_SERVICES_LIST}
+    end
+
+    describe services do
+      it{ should_not be_in DISALLOWED_SERVICES_LIST}
+    end
+
+    services.each do |service|
+      service_path = service(service).params['ExecStart'].scan(/path=(.+)[\s][;][\s]argv/).join
+      describe service_path do
+        it { should_not cmp '/'}
+      end
+      webserver_roots.each do |root|
+        describe service_path do
+          it { should_not match root}
         end
       end
     end
-  end
 
-  services = command('systemctl -r --type service --all').stdout.scan(/^\s\s(.+).service/).flatten
-
-  describe services do
-    it{ should be_in ALLOWED_SERVICES_LIST}
-  end
-
-  describe services do
-    it{ should_not be_in DISALLOWED_SERVICES_LIST}
-  end
-
-  services.each do |service|
-    service_path = service(service).params['ExecStart'].scan(/path=(.+)[\s][;][\s]argv/).join
-    describe service_path do
-      it { should_not cmp '/'}
-    end
-    webserver_roots.each do |root|
-      describe service_path do
-        it { should_not match root}
+    if services.empty?
+      describe do
+        skip "Skipped: no services found."
       end
     end
-  end
-
-  if services.empty?
-    describe do
-      skip "Skipped: no services found."
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
+
 end

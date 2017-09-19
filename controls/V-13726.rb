@@ -73,34 +73,28 @@ control "V-13726" do
 
   keepalive_timeout   5 5;"
 
-  # START_DESCRIBE V-13726
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['keepalive_timeout'] do
-      it { should cmp [['5', '5']] }
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['keepalive_timeout'].nil?
-            describe server['keepalive_timeout'] do
-              it { should cmp [['5', '5']] }
-            end
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['keepalive_timeout'].nil?
-                describe location['keepalive_timeout'] do
-                  it { should cmp [['5', '5']] }
-                end
-              end
-            end
-          end
-        end
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['keepalive_timeout'] do
+        it { should cmp [['5', '5']] }
       end
     end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['keepalive_timeout'] do
+        it { should cmp [['5', '5']] }
+      end unless server.params['keepalive_timeout'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      describe location.params['keepalive_timeout'] do
+        it { should cmp [['5', '5']] }
+      end unless location.params['keepalive_timeout'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-13726
 end

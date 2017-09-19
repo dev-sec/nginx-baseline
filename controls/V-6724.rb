@@ -64,36 +64,37 @@ control "V-6724" do
 
   Note: The default value is set to on."
 
-# START_DESCRIBE V-6724
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      describe http['server_tokens'] do
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['server_tokens'] do
         it { should cmp [['off']] }
       end
     end
-  end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['server_tokens'].nil?
-            describe server['server_tokens'] do
-              it { should cmp [['off']] }
-            end
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['server_tokens'].nil?
-                describe location['server_tokens'] do
-                  it { should cmp [['off']] }
-                end
-              end
-            end
-          end
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe.one do
+        describe server.params['server_tokens'] do
+          it { should be nil }
+        end
+        describe server.params['server_tokens'] do
+          it { should cmp [['off']] }
         end
       end
     end
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      describe.one do
+        describe location.params['server_tokens'] do
+          it { should be nil }
+        end
+        describe location.params['server_tokens'] do
+          it { should cmp [['off']] }
+        end
+      end
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-# STOP_DESCRIBE V-6724
 end

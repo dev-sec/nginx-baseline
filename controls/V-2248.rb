@@ -101,17 +101,26 @@ control "V-2248" do
   have access to the web administration tool or control files, this is a
   finding. "
 
-  nginx_conf(NGINX_CONF_FILE).conf_files.each do |file|
-    describe file(file) do
-      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
-      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
-      its('mode')  { should cmp <= 0660 }
-    end
-  end
+  begin
+    nginx_handle = nginx_conf(NGINX_CONF_FILE)
+    nginx_handle.params
 
-  if nginx_conf(NGINX_CONF_FILE).conf_files.empty?
-    describe do
-      skip "Skipped: no conf files included."
+    nginx_handle.contents.keys.each do |file|
+      describe file(file) do
+        its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+        its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+        its('mode')  { should cmp <= 0660 }
+      end
+    end
+
+    if nginx_handle.contents.keys.empty?
+      describe do
+        skip "Skipped: no conf files included."
+      end
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
 end

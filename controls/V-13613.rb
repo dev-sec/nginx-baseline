@@ -73,14 +73,19 @@ control "V-13613" do
   management plan to stay compliant with all web server security-related
   patches."
 
-  describe linux_update do
-    it { should be_uptodate }
-  end
+  begin
+    describe linux_update do
+      it { should be_uptodate }
+    end
 
-  linux_update.updates.each do |update|
-    describe package(update['name']) do
-      its('version') { should eq update['version'] }
+    linux_update.updates.each do |update|
+      describe package(update['name']) do
+        its('version') { should eq update['version'] }
+      end
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
 end

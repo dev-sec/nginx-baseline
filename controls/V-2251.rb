@@ -88,15 +88,23 @@ control "V-2251" do
 
   tag "fix": "Remove any unnecessary applications."
 
-  ps_list = command('ps -A').stdout.scan(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\s(.+)/).flatten.uniq
 
-  describe ps_list do
-    it { should be_in AUTHORIZED_PROCESS_LIST}
-  end
+  begin
+    ps_list = command('ps -A').stdout.scan(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\s(.+)/).flatten.uniq
 
-  if ps_list.empty?
-    describe do
-      skip "Skipped: no processes parsed."
+    describe ps_list do
+      it { should be_in AUTHORIZED_PROCESS_LIST}
+    end
+
+    if ps_list.empty?
+      describe do
+        skip "Skipped: no processes parsed."
+      end
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
 end

@@ -63,25 +63,22 @@ control "V-13737" do
   tag "fix": "Edit the configuration file to set the
   large_client_header_buffers to 2 buffers and 1k."
 
-  # START_DESCRIBE V-13737
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['large_client_header_buffers'].flatten do
-      it { should cmp ['2','1k'] }
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['large_client_header_buffers'].nil?
-            describe server['large_client_header_buffers'].flatten do
-              it { should cmp ['2','1k'] }
-            end
-          end
-        end
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['large_client_header_buffers'] do
+        it { should cmp [['2','1k']] }
       end
     end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['large_client_header_buffers'] do
+        it { should cmp [['2','1k']] }
+      end unless server.params['large_client_header_buffers'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-13737
 end

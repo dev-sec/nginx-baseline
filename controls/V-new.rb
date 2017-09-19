@@ -68,26 +68,23 @@ If the entry is not found, this is a finding."
   }
   "
 
-  # START_DESCRIBE V-60707
-  nginx_conf(NGINX_CONF_FILE).http.each do |http|
-    describe http['ssl_protocols'] do
-      it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['ssl_protocols'].nil?
-            describe server['ssl_protocols'] do
-              it { should cmp [['TLSv1 TLSv1.1 TLSv1.2']] }
-            end
-          end
-        end
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['ssl_protocols'] do
+        it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
       end
     end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['ssl_protocols'] do
+        it { should cmp [["TLSv1", "TLSv1.1", "TLSv1.2"]] }
+      end unless server.params['ssl_protocols'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-60707
 
 end

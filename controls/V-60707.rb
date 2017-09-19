@@ -115,53 +115,50 @@ control "V-60707" do
   }
   "
 
-  # START_DESCRIBE V-60707
-  disabled_ssl_ciphers = ['aNULL', 'eNULL', 'EXPORT', 'DES', 'MD5', 'PSK', 'RC4']
+  begin
+    disabled_ssl_ciphers = ['aNULL', 'eNULL', 'EXPORT', 'DES', 'MD5', 'PSK', 'RC4']
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      describe http['ssl_prefer_server_ciphers'] do
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['ssl_prefer_server_ciphers'] do
         it { should cmp [['on']]}
       end
-      describe http['ssl_ciphers'] do
+      describe http.params['ssl_ciphers'] do
         it { should_not be_nil }
       end
-      if !http['ssl_ciphers'].nil?
+
+      unless http.params['ssl_ciphers'].nil?
         disabled_ssl_ciphers.each do |cipher|
-          describe http['ssl_ciphers'].join do
+          describe http.params['ssl_ciphers'].join do
             it { should match "!#{cipher}"}
           end
         end
-        describe http['ssl_ciphers'].join do
+        describe http.params['ssl_ciphers'].join do
           it { should match '@STRENGTH'}
         end
       end
     end
-  end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['ssl_prefer_server_ciphers'].nil?
-            describe server['ssl_prefer_server_ciphers'] do
-              it { should cmp [['on']]}
-            end
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['ssl_prefer_server_ciphers'] do
+        it { should cmp [['on']]}
+      end unless server.params['ssl_prefer_server_ciphers'].nil?
+      
+      unless server.params['ssl_ciphers'].nil?
+        disabled_ssl_ciphers.each do |cipher|
+          describe server.params['ssl_ciphers'].join do
+            it { should match "!#{cipher}"}
           end
-          if !server['ssl_ciphers'].nil?
-            disabled_ssl_ciphers.each do |cipher|
-              describe server['ssl_ciphers'].join do
-                it { should match "!#{cipher}"}
-              end
-            end
-            describe server['ssl_ciphers'].join do
-              it { should match '@STRENGTH'}
-            end
-          end
+        end
+        describe server.params['ssl_ciphers'].join do
+          it { should match '@STRENGTH'}
         end
       end
     end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-60707
 
 end

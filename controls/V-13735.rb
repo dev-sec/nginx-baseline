@@ -75,40 +75,32 @@ control "V-13735" do
 
   random_index off;"
 
-  # START_DESCRIBE V-13735
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['autoindex'] do
-      it { should cmp [['off']] }
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['autoindex'].nil?
-            describe server['autoindex'] do
-              it { should cmp [['off']] }
-            end
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['autoindex'].nil?
-                describe location['autoindex'] do
-                  it { should cmp [['off']] }
-                end
-              end
-              if !location['random_index'].nil?
-                describe location['random_index'] do
-                  it { should cmp [['off']] }
-                end
-              end
-            end
-          end
-        end
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['autoindex'] do
+        it { should cmp [['off']] }
       end
     end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['autoindex'] do
+        it { should cmp [['off']] }
+      end unless server.params['autoindex'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      describe location.params['autoindex'] do
+        it { should cmp [['off']] }
+      end unless location.params['autoindex'].nil?
+      describe location.params['random_index'] do
+        it { should cmp [['off']] }
+      end
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-13735
 
 end

@@ -22,8 +22,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-require_relative '../libraries/nginx_conf'
-
 NGINX_CONF_FILE= attribute(
   'nginx_conf_file',
   description: 'Path for the nginx configuration file',
@@ -90,43 +88,39 @@ control "V-13620" do
   tag "fix": "Configure the web server’s trust store to trust only DoD-
   approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners)."
 
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      ssl_client_certificate = http['ssl_client_certificate'].join
-      describe x509_certificate(ssl_client_certificate) do
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['ssl_client_certificate'] do
         it { should_not be_nil}
-        its('subject.C'){ should cmp 'US'}
-        its('subject.O'){ should cmp 'U.S. Government'}
       end
-      describe.one do
-        DOD_APPROVED_PKIS.each do |pki|
-          describe x509_certificate(ssl_client_certificate) do
-            its('subject.CN'){ should match pki}
-          end
+      http.params['ssl_client_certificate'].each do |cert|
+        describe x509_certificate(cert.join) do
+          it { should_not be_nil}
+          its('subject.C') { should cmp 'US'}
+          its('subject.O') { should cmp 'U.S. Government'}
         end
-      end
+        describe x509_certificate(cert.join).subject.CN[0..2] do
+          it { should be_in DOD_APPROVED_PKIS}
+        end
+      end unless http.params['ssl_client_certificate'].nil?
     end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['ssl_client_certificate'].nil?
-            ssl_client_certificate = http['ssl_client_certificate'].join
-            describe x509_certificate(ssl_client_certificate) do
-              it { should_not be_nil}
-              its('subject.C'){ should cmp 'US'}
-              its('subject.O'){ should cmp 'U.S. Government'}
-            end
-            describe.one do
-              DOD_APPROVED_PKIS.each do |pki|
-                describe x509_certificate(ssl_client_certificate) do
-                  its('subject.CN'){ should match pki}
-                end
-              end
-            end
-          end
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      server.params['ssl_client_certificate'].each do |cert|
+        describe x509_certificate(cert.join) do
+          it { should_not be_nil}
+          its('subject.C') { should cmp 'US'}
+          its('subject.O') { should cmp 'U.S. Government'}
         end
-      end
+        describe x509_certificate(cert.join).subject.CN[0..2] do
+          it { should be_in DOD_APPROVED_PKIS}
+        end
+      end unless server.params['ssl_client_certificate'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
 end

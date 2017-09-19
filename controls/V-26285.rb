@@ -101,14 +101,16 @@ control "V-26285" do
   Use the configure script (available in the nginx download package) to exclude
   modules using the --without {module_name} option to reject unneeded modules."
 
-  # START_DESCRIBE V-26285
-  describe nginx do
-    its('modules') { should be_in NGINX_AUTHORIZED_MODULES }
+  begin
+    describe nginx do
+      its('modules') { should be_in NGINX_AUTHORIZED_MODULES }
+    end
+    describe nginx do
+      its('modules') { should_not be_in NGINX_UNAUTHORIZED_MODULES }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-
-  describe nginx do
-    its('modules') { should_not be_in NGINX_UNAUTHORIZED_MODULES }
-  end
-  # STOP_DESCRIBE V-26285
-
 end

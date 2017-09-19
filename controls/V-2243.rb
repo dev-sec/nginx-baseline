@@ -74,30 +74,24 @@ control "V-2243" do
 
   # collect and test each listen IPs from nginx_conf
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['listen'].nil?
-            server['listen'].each do |listen|
-              describe listen.join do
-                it { should match %r([0-9]+(?:\.[0-9]+){3}|[a-zA-Z]:[0-9]+) }
-              end
-              server_ip = listen.join.split(':').first
-              server_ip = server_ip.eql?('localhost') ? '127.0.0.1' : server_ip
-              if !(IPAddr.new(server_ip) rescue nil).nil?
-                describe IPAddr.new(DMZ_SUBNET) === IPAddr.new(server_ip) do
-                  it { should be false}
-                end
-              end
-            end
-          else
-            describe do
-              skip "Skipped: Listen tag not found."
-            end
+  begin
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      server.params['listen'].each do |listen|
+        describe listen.join do
+          it { should match %r([0-9]+(?:\.[0-9]+){3}|[a-zA-Z]:[0-9]+) }
+        end
+        server_ip = listen.join.split(':').first
+        server_ip = server_ip.eql?('localhost') ? '127.0.0.1' : server_ip
+        if !(IPAddr.new(server_ip) rescue nil).nil?
+          describe IPAddr.new(DMZ_SUBNET) === IPAddr.new(server_ip) do
+            it { should be false}
           end
         end
-      end
+      end unless server.params['listen'].nil?
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
 end

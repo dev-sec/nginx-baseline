@@ -71,8 +71,14 @@ control "V-2232" do
   tag "fix": "Ensure the SA or Web Manager are entrusted with the web
   service(s) password."
 
-  describe passwd.users(NGINX_OWNER).passwords do
-    it { should_not cmp ['']}
-  end
 
+  begin
+    describe passwd.users(NGINX_OWNER).passwords do
+      it { should_not cmp ['']}
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
+  end
 end

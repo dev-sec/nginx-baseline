@@ -87,50 +87,38 @@ control "V-26305" do
   tag "fix": "Modify the location, permissions, and/or ownership for the PID
   file folder. "
 
-  # START_DESCRIBE V-26305
+  begin
+    webserver_roots = []
 
-  # collect root directores from nginx_conf
-  webserver_roots = []
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      webserver_roots.push(http.params['root']) unless http.params['root'].nil?
+    end
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      webserver_roots.push(server.params['root']) unless server.params['root'].nil?
+    end
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      webserver_roots.push(location.params['root']) unless location.params['root'].nil?
+    end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      if !http['root'].nil?
-        webserver_roots.push(http['root'].join)
-      end
+    webserver_roots.flatten!.uniq!
+
+    describe file(nginx_conf(NGINX_CONF_FILE).params['pid'].join) do
+      it { should exist }
+      its ('owner') { should match %r(#{NGINX_OWNER}|#{SYS_ADMIN}) }
+      its ('group') { should match %r(#{NGINX_GROUP}|#{SYS_ADMIN_GROUP}) }
+      its ('mode')  { should cmp <= 0660 }
+    end unless nginx_conf(NGINX_CONF_FILE).params['pid'].nil?
+
+    webserver_roots.each do |root|
+      describe nginx_conf(NGINX_CONF_FILE).params['pid'].join do
+        it { should_not match root }
+      end unless nginx_conf(NGINX_CONF_FILE).params['pid'].nil?
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['root'].nil?
-            webserver_roots.push(server['root'].join)
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['root'].nil?
-                webserver_roots.push(location['root'].join)
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-
-  describe file(nginx_conf(NGINX_CONF_FILE).pid.join) do
-    it { should exist }
-    its ('owner') { should match %r(#{NGINX_OWNER}|#{SYS_ADMIN}) }
-    its ('group') { should match %r(#{NGINX_GROUP}|#{SYS_ADMIN_GROUP}) }
-    its('mode')  { should cmp <= 0660 }
-  end
-
-  webserver_roots.each do |root|
-    describe nginx_conf(NGINX_CONF_FILE) do
-      its ('pid.join') { should_not match root }
-    end
-  end
-  # STOP_DESCRIBE V-26305
 
 end

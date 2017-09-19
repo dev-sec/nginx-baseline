@@ -74,9 +74,13 @@ control "V-2246" do
   tag "fix": "Install the current version of the web server software and
   maintain appropriate service packs and patches."
 
-# START_DESCRIBE V-2246
-  describe nginx do
+  begin
+    describe nginx do
       its('version'){ should cmp >= NGINX_MIN_VER }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-# STOP_DESCRIBE V-2246
 end

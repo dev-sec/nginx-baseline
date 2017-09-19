@@ -66,9 +66,13 @@ control "V-2271" do
   equivalent directory. This can be done with something as simple as a script or
   batch file that would identify a change in the file."
 
-  # STOP_DESCRIBE V-2271
-  describe package(MONITORINGSOFTWARE) do
-    it{ should be_installed }
+  begin
+    describe package(MONITORINGSOFTWARE) do
+      it{ should be_installed }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-2271
 end

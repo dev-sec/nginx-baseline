@@ -80,35 +80,36 @@ control "V-13724" do
 
   client_header_timeout 10s;"
 
-  # START_DESCRIBE V-13724
-
-  nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-    describe http['client_body_timeout'].join do
-      it { should cmp <= '10' }
-    end
-    describe http['client_header_timeout'].join do
-      it { should cmp <= '10' }
-    end
-  end
-
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['client_body_timeout'].nil?
-            describe http['client_body_timeout'].join do
-              it { should cmp <= '10' }
-            end
-          end
-          if !server['client_header_timeout'].nil?
-            describe http['client_header_timeout'].join do
-              it { should cmp <= '10' }
-            end
-          end
-        end
+  begin
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      describe http.params['client_header_timeout'] do
+        it { should_not be_nil}
       end
+      describe http.params['client_header_timeout'].flatten do
+        it { should cmp <= 10 }
+      end unless http.params['client_header_timeout'].nil?
+
+      describe http.params['client_body_timeout'] do
+        it { should_not be_nil}
+      end
+      describe http.params['client_body_timeout'].flatten do
+        it { should cmp <= 10 }
+      end unless http.params['client_body_timeout'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      describe server.params['client_header_timeout'].flatten do
+        it { should cmp <= 10 }
+      end unless server.params['client_header_timeout'].nil?
+      describe server.params['client_body_timeout'].flatten do
+        it { should cmp <= 10 }
+      end unless server.params['client_body_timeout'].nil?
+    end
+
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
-  # STOP_DESCRIBE V-13724
 end

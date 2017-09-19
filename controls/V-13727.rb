@@ -72,9 +72,14 @@ control "V-13727" do
 
   worker_processes auto;"
 
-  # START_DESCRIBE V-13727
-  describe nginx_conf(NGINX_CONF_FILE).params['worker_processes'] do
-    it { should cmp [['auto']] }
+  begin
+    describe nginx_conf(NGINX_CONF_FILE).params['worker_processes'] do
+      it { should cmp [['auto']] }
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
+    end
   end
-  # STOP_DESCRIBE V-13727
+
 end

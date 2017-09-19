@@ -76,30 +76,22 @@ control "V-26326" do
   tag "fix": "Edit the nginx.conf file and set the ""listen"" directive to
   listen on a specific IP address and port. "
 
-  # START_DESCRIBE V-26326
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['listen'].nil?
-            server['listen'].each do |listen|
-              describe listen.join do
-                it { should match %r([0-9]+(?:\.[0-9]+){3}|[a-zA-Z]:[0-9]+) }
-              end
-              describe listen.join.split(':').first do
-                it { should_not cmp '0.0.0.0' }
-                it { should_not cmp '[::ffff:0.0.0.0]' }
-              end
-            end
-          else
-            describe do
-              skip "Skipped: Listen tag not found."
-            end
-          end
+  begin
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      server.params['listen'].each do |listen|
+        describe listen.join do
+          it { should match %r([0-9]+(?:\.[0-9]+){3}|[a-zA-Z]:[0-9]+) }
         end
-      end
+        describe listen.join.split(':').first do
+          it { should_not cmp '0.0.0.0' }
+          it { should_not cmp '[::ffff:0.0.0.0]' }
+        end
+      end unless server.params['listen'].nil?
+    end
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-  # STOP_DESCRIBE V-26326
 
 end

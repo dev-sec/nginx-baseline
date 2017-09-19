@@ -86,25 +86,27 @@ control "V-2255" do
   tag "fix": "The SA or Web Manager account
   should own the htpasswd file and permissions should be set to 550."
 
-# START_DESCRIBE V-2255
-  htpasswd = command('find / -name .htpasswd').stdout.chomp
-  htpasswd.split.each do |htpwd|
-    describe file(htpwd) do
-      its('mode') { should cmp <= 0550 }
+  begin
+    htpasswd = command('find / -name .htpasswd').stdout.chomp
+    htpasswd.split.each do |htpwd|
+      describe file(htpwd) do
+        its('mode') { should cmp <= 0550 }
+      end
+      describe file(htpwd) do
+        its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
+        its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+      end
     end
-    describe file(htpwd) do
-      its('owner') { should match %r(#{SYS_ADMIN}|#{NGINX_OWNER}) }
-      its('group') { should match %r(#{SYS_ADMIN_GROUP}|#{NGINX_GROUP}) }
+
+    if htpasswd.empty?
+      describe do
+        skip "Skipped: .htpasswd file not found"
+      end
+    end
+
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
-
-  if htpasswd.empty?
-    describe do
-      skip "Skipped: .htpasswd file not found"
-    end
-  end
-
-
-# STOP_DESCRIBE V-2255
-
 end

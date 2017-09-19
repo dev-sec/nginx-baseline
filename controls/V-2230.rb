@@ -82,59 +82,51 @@ control "V-2230" do
   tag "fix": "Ensure that CGI backup scripts are not left on the production
   web server."
 
-  dirs = ['/home',NGINX_BACKUP_REPOSITORY]
+  begin
+    dirs = ['/home',NGINX_BACKUP_REPOSITORY]
 
-  # collect root directores from nginx_conf
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).params['http'].each do |http|
-      if !http['root'].nil?
-        dirs.push(http['root'].join)
+    nginx_conf(NGINX_CONF_FILE).http.entries.each do |http|
+      dirs.push(http.params['root']) unless http.params['root'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).servers.entries.each do |server|
+      dirs.push(server.params['root']) unless server.params['root'].nil?
+    end
+
+    nginx_conf(NGINX_CONF_FILE).locations.entries.each do |location|
+      dirs.push(location.params['root']) unless location.params['root'].nil?
+    end
+
+    dirs.flatten!.uniq!
+
+    dirs.each do |dir|
+      describe command("find #{dir} -name *.bak").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name *.old").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name *.temp").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name *.tmp").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name *.backup").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name .?*").stdout.chomp.split do
+        it {should be_empty}
+      end
+      describe command("find #{dir} -name *~").stdout.chomp.split do
+        it {should be_empty}
       end
     end
-  end
 
-  if !nginx_conf(NGINX_CONF_FILE).http.nil?
-    nginx_conf(NGINX_CONF_FILE).http.each do |http|
-      if !http['server'].nil?
-        http['server'].each do |server|
-          if !server['root'].nil?
-            dirs.push(server['root'].join)
-          end
-          if !server['location'].nil?
-            server['location'].each do |location|
-              if !location['root'].nil?
-                dirs.push(location['root'].join)
-              end
-            end
-          end
-        end
-      end
-    end
-  end
 
-  dirs.flatten!
-
-  dirs.each do |dir|
-    describe command("find #{dir} -name *.bak").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name *.old").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name *.temp").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name *.tmp").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name *.backup").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name .?*").stdout.chomp.split do
-      it {should be_empty}
-    end
-    describe command("find #{dir} -name *~").stdout.chomp.split do
-      it {should be_empty}
+  rescue Exception => msg
+    describe "Exception: #{msg}" do
+      it { should be_nil}
     end
   end
 end
