@@ -1,0 +1,172 @@
+# encoding: utf-8
+#
+# This is an example of an attributes file that can be passed to the profile
+# to override the defaults of the attributes defined in each of the tests.
+# You can use this to automatically adjust your tests when using automation or
+# progromatic deployment or validation of differnt deployment patterns without
+# having to adjust the core profile.
+
+# === PROFILE USER EDIT ===
+
+#description: Path for the nginx configuration file
+nginx_conf_file: '/etc/nginx/nginx.conf'
+
+#description: Path to nginx backup repository
+nginx_backup_repository: '/usr/share/nginx/html'
+
+#description: Subnet of the DMZ
+dmz_subnet: '62.0.0.0/24'
+
+#description: Minimum Web vendor-supported version.
+nginx_min_ver: '1.12.0'
+
+#description: List of authorized running processes,
+authorized_process_list:
+    ['nginx',
+     'systemd',
+     'systemd-journal',
+     'systemd-udevd',
+     'systemd-logind',
+     'dbus-daemon',
+     'agetty',
+     'bash',
+     'ps',
+     'openssl'
+    ]
+
+#description: Nginx owner
+nginx_owner: 'nginx'
+
+#description: The Nginx group,
+nginx_group: 'nginx'
+
+#description: The system adminstrator,
+sys_admin: 'root'
+
+#description: The system adminstrator group,
+sys_admin_group: 'root'
+
+#description: List of non admin user accounts
+authorized_user_list:
+    ['user'
+    ]
+
+#description: Monitoring software for CGI or equivalent programs,
+monitoring_software: 'audit'
+
+#description: List of allowed services
+allowed_services_list:
+    ['brandbot',
+    'dbus',
+    'dracut-shutdown',
+    'emergency',
+    'getty@tty1',
+    'kmod-static-nodes',
+    'network',
+    'nginx',
+    'rc-local',
+    'rescue',
+    'rhel-autorelabel-mark',
+    'rhel-autorelabel',
+    'rhel-configure',
+    'rhel-dmesg',
+    'rhel-import-state',
+    'rhel-loadmodules',
+    'rhel-readonly',
+    'serial-getty@ttyS0',
+    'systemd-ask-password-console',
+    'systemd-ask-password-wall',
+    'systemd-binfmt',
+    'systemd-firstboot',
+    'systemd-fsck-root',
+    'systemd-hwdb-update',
+    'systemd-initctl',
+    'systemd-journal-catalog-update',
+    'systemd-journal-flush',
+    'systemd-journald',
+    'systemd-logind',
+    'systemd-modules-load',
+    'systemd-random-seed',
+    'systemd-readahead-collect',
+    'systemd-readahead-done',
+    'systemd-readahead-replay',
+    'systemd-reboot',
+    'systemd-shutdownd',
+    'systemd-sysctl',
+    'systemd-tmpfiles-clean',
+    'systemd-tmpfiles-setup-dev',
+    'systemd-tmpfiles-setup',
+    'systemd-udev-trigger',
+    'systemd-udevd',
+    'systemd-update-done',
+    'systemd-update-utmp-runlevel',
+    'systemd-update-utmp',
+    'systemd-user-sessions',
+    'systemd-vconsole-setup',
+    'auditd'
+    ]
+
+#description: List of disallowed services
+disallowed_services_list:
+    ['mysql',
+     'postgres',
+     'named'
+    ]
+
+# description: List of disallowed compilers
+disallowed_compiler_list:
+    ['gcc'
+    ]
+
+#description: DoD-approved PKIs (e.g., DoD PKI, DoD ECA, and DoD-approved external partners.
+dod_approved_pkis:
+    ['DoD',
+     'ECA'
+    ]
+
+#description: File list of  documentation, sample code, example applications, and tutorials.
+nginx_disallowed_file_list:
+    [ '/usr/share/man/man8/nginx.8.gz'
+    ]
+
+#description: File list of allowed documentation, sample code, example applications, and tutorials.
+nginx_allowed_file_list:
+    [
+    ]
+
+#description: List of  authorized nginx modules.
+nginx_authorized_modules:
+    ['http_addition',
+     'http_auth_request',
+     'http_dav',
+     'http_flv',
+     'http_gunzip',
+     'http_gzip_static',
+     'http_mp4',
+     'http_random_index',
+     'http_realip',
+     'http_secure_link',
+     'http_slice',
+     'http_ssl',
+     'http_stub_status',
+     'http_sub',
+     'http_v2',
+     'mail_ssl',
+     'stream_realip',
+     'stream_ssl',
+     'stream_ssl_preread'
+     ]
+
+#description: List of  unauthorized nginx modules.
+nginx_unauthorized_modules:
+    [
+    ]
+
+#description: Path for the nginx binary
+nginx_path: '/usr/sbin/nginx'
+
+#description: domain and port to the OCSP Server
+ocsp_server: 'login.live.com:443'
+
+#description: Frequency at which CRL is updated in days
+crl_udpate_frequency: 7

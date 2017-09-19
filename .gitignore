@@ -4,3 +4,6 @@
 Gemfile.lock
 Berksfile.lock
 nbproject
+.DS_Store
+.gitter
+**/.kitchen/
