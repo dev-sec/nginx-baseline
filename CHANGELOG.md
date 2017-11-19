@@ -1,5 +1,14 @@
 # Change Log
 
+## [2.1.0](https://github.com/dev-sec/nginx-baseline/tree/2.1.0) (2017-11-19)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.0.2...2.1.0)
+
+**Merged pull requests:**
+
+- More nginx controls, add attribute client\_max\_body\_size [\#19](https://github.com/dev-sec/nginx-baseline/pull/19) ([atomic111](https://github.com/atomic111))
+- use recommended spdx license identifier [\#18](https://github.com/dev-sec/nginx-baseline/pull/18) ([chris-rock](https://github.com/chris-rock))
+- Fix deprecation warnings. [\#17](https://github.com/dev-sec/nginx-baseline/pull/17) ([tmclaugh](https://github.com/tmclaugh))
+
 ## [2.0.2](https://github.com/dev-sec/nginx-baseline/tree/2.0.2) (2017-05-08)
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.0.1...2.0.2)
 
