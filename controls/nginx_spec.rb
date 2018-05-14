@@ -182,24 +182,6 @@ end
 
 control 'nginx-07' do
   impact 1.0
-  title 'Control timeouts to improve performance'
-  desc 'Control timeouts to improve server performance and cut clients.'
-  describe parse_config_file(nginx_conf, options) do
-    its('keepalive_timeout') { should eq KEEPALIVE_TIMEOUT }
-  end
-  describe parse_config_file(nginx_hardening, options) do
-    its('client_body_timeout') { should eq CLIENT_BODY_TIMEOUT }
-  end
-  describe parse_config_file(nginx_hardening, options) do
-    its('client_header_timeout') { should eq CLIENT_HEADER_TIMEOUT }
-  end
-  describe parse_config_file(nginx_hardening, options) do
-    its('send_timeout') { should eq SEND_TIMEOUT }
-  end
-end
-
-control 'nginx-07' do
-  impact 1.0
   title 'Control simultaneous connections'
   desc 'NginxHttpLimitZone module to limit the number of simultaneous connections for the assigned session or as a special case, from one IP address.'
   describe parse_config_file(nginx_hardening, options) do
@@ -296,5 +278,23 @@ control 'nginx-16' do
   desc 'You can mitigate most of the common Cross Site Scripting attack using HttpOnly and Secure flag in a cookie. Without having HttpOnly and Secure, it is possible to steal or manipulate web application session and cookies and it’s dangerous.'
   describe parse_config_file(nginx_hardening, options_add_header) do
     its('content') { should match(/^\s*set_cookie_flag * HttpOnly secure;$/) }
+  end
+end
+
+control 'nginx-17' do
+  impact 1.0
+  title 'Control timeouts to improve performance'
+  desc 'Control timeouts to improve server performance and cut clients.'
+  describe parse_config_file(nginx_conf, options) do
+    its('keepalive_timeout') { should eq KEEPALIVE_TIMEOUT }
+  end
+  describe parse_config_file(nginx_hardening, options) do
+    its('client_body_timeout') { should eq CLIENT_BODY_TIMEOUT }
+  end
+  describe parse_config_file(nginx_hardening, options) do
+    its('client_header_timeout') { should eq CLIENT_HEADER_TIMEOUT }
+  end
+  describe parse_config_file(nginx_hardening, options) do
+    its('send_timeout') { should eq SEND_TIMEOUT }
   end
 end
