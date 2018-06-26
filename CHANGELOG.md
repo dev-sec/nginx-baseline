@@ -1,7 +1,7 @@
 # Change Log
 
-## [2.1.0](https://github.com/dev-sec/nginx-baseline/tree/2.1.0) (2018-06-26)
-[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.1.0...2.1.0)
+## [2.2.0](https://github.com/dev-sec/nginx-baseline/tree/2.2.0) (2018-06-26)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.1.0...2.2.0)
 
 **Closed issues:**
 
