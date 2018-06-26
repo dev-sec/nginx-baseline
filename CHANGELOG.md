@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.1.0](https://github.com/dev-sec/nginx-baseline/tree/2.1.0) (2018-06-26)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.1.0...2.1.0)
+
+**Closed issues:**
+
+- client\_max\_body\_size 1k disallows file uploads [\#13](https://github.com/dev-sec/nginx-baseline/issues/13)
+
+**Merged pull requests:**
+
+- Duplicated control 'nginx-11' [\#24](https://github.com/dev-sec/nginx-baseline/pull/24) ([pbanderas](https://github.com/pbanderas))
+- Control label 'nginx-07' is used twice [\#22](https://github.com/dev-sec/nginx-baseline/pull/22) ([woneill](https://github.com/woneill))
+
 ## [2.1.0](https://github.com/dev-sec/nginx-baseline/tree/2.1.0) (2017-11-19)
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.0.2...2.1.0)
 
