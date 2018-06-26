@@ -219,15 +219,6 @@ control 'nginx-10' do
   end
 end
 
-control 'nginx-11' do
-  impact 1.0
-  title 'Disable content-type sniffing'
-  desc 'It prevents browser from trying to mime-sniff the content-type of a response away from the one being declared by the server. It reduces exposure to drive-by downloads and the risks of user uploaded content that, with clever naming, could be treated as a different content-type, like an executable.'
-  describe parse_config_file(nginx_hardening, options_add_header) do
-    its('add_header') { should include 'X-Content-Type-Options nosniff' }
-  end
-end
-
 control 'nginx-12' do
   impact 1.0
   title 'TLS Protocols'
