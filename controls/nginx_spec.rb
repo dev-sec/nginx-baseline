@@ -81,6 +81,12 @@ HTTP_METHODS_CHECK = attribute(
   default: false
 )
 
+NGINX_COOKIE_FLAG_MODULE = attribute(
+  'nginx_cookie_flag_module',
+  description: 'Defines if nginx has been compiled with nginx_cookie_flag_module',
+  default: false
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -274,6 +280,7 @@ control 'nginx-16' do
   impact 1.0
   title 'Set cookie with HttpOnly and Secure flag'
   desc 'You can mitigate most of the common Cross Site Scripting attack using HttpOnly and Secure flag in a cookie. Without having HttpOnly and Secure, it is possible to steal or manipulate web application session and cookies and it’s dangerous.'
+  only_if { NGINX_COOKIE_FLAG_MODULE != false }
   describe parse_config_file(nginx_hardening, options_add_header) do
     its('content') { should match(/^\s*set_cookie_flag * HttpOnly secure;$/) }
   end
