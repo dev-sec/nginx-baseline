@@ -75,6 +75,12 @@ HTTP_METHODS = attribute(
   default: 'GET\|HEAD\|POST'
 )
 
+HTTP_METHODS_CHECK = attribute(
+  'http_methods_check',
+  description: 'Defines if http_methods should be checked in the nginx configuration',
+  default: false
+)
+
 only_if do
   command('nginx').exist?
 end
@@ -249,6 +255,7 @@ control 'nginx-14' do
   desc 'Disable insecure HTTP-methods and allow only necessary methods.'
   ref 'OWASP HTTP Methods', url: 'https://www.owasp.org/index.php/Test_HTTP_Methods_(OTG-CONFIG-006)'
 
+  only_if { HTTP_METHODS_CHECK != false }
   describe file(nginx_conf) do
     its('content') { should match(/^\s*if\s+\(\$request_method\s+\!\~\s+\^\(#{HTTP_METHODS}\)\$\)\{?$/) }
   end
