@@ -84,8 +84,6 @@ nginx_path          = '/etc/nginx'
 nginx_conf          = File.join(nginx_path, 'nginx.conf')
 nginx_confd         = File.join(nginx_path, 'conf.d')
 nginx_enabled       = File.join(nginx_path, 'sites-enabled')
-nginx_hardening     = File.join(nginx_confd, '90.hardening.conf')
-conf_paths          = [nginx_conf, nginx_hardening]
 nginx_parsed_config = command('nginx -T').stdout
 
 options = {
@@ -136,12 +134,6 @@ control 'nginx-03' do
 
   describe file(File.join(nginx_enabled, 'default')) do
     it { should_not be_file }
-  end
-
-  conf_paths.each do |conf_path|
-    describe file(conf_path) do
-      it { should be_file }
-    end
   end
 end
 
