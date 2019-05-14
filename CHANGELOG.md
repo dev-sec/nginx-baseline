@@ -1,5 +1,15 @@
 # Change Log
 
+## [2.3.0](https://github.com/dev-sec/nginx-baseline/tree/2.3.0) (2019-05-14)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.2.0...2.3.0)
+
+**Merged pull requests:**
+
+- Templates [\#30](https://github.com/dev-sec/nginx-baseline/pull/30) ([rndmh3ro](https://github.com/rndmh3ro))
+- remove test for hardening.conf file [\#28](https://github.com/dev-sec/nginx-baseline/pull/28) ([rndmh3ro](https://github.com/rndmh3ro))
+- use parse\_config instead of parse\_config\_file [\#27](https://github.com/dev-sec/nginx-baseline/pull/27) ([rndmh3ro](https://github.com/rndmh3ro))
+- Make nginx-14 and nginx-16 disabled by default based on dev-sec/nginx-baseline\#21 [\#26](https://github.com/dev-sec/nginx-baseline/pull/26) ([woneill](https://github.com/woneill))
+
 ## [2.2.0](https://github.com/dev-sec/nginx-baseline/tree/2.2.0) (2018-06-26)
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.1.0...2.2.0)
 

@@ -3,4 +3,5 @@
 **/.tmp
 Gemfile.lock
 Berksfile.lock
+inspec.lock
 nbproject
