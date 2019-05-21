@@ -24,3 +24,6 @@ Metrics/PerceivedComplexity:
   Max: 10
 Metrics/AbcSize:
   Max: 30
+# Some releases of InSpec have issues with character encoding unless the encoding is declared.
+Style/Encoding:
+  Enabled: false
