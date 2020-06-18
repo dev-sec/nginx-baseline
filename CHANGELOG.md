@@ -1,8 +1,16 @@
 # Changelog
 
-## [2.0.3](https://github.com/dev-sec/nginx-baseline/tree/2.0.3) (2020-06-18)
+## [2.3.2](https://github.com/dev-sec/nginx-baseline/tree/2.3.2) (2020-06-18)
 
-[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.0...2.0.3)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.1...2.3.2)
+
+**Merged pull requests:**
+
+- version alignment [\#40](https://github.com/dev-sec/nginx-baseline/pull/40) ([micheelengronne](https://github.com/micheelengronne))
+
+## [2.3.1](https://github.com/dev-sec/nginx-baseline/tree/2.3.1) (2020-06-18)
+
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.0...2.3.1)
 
 **Closed issues:**
 
@@ -47,6 +55,7 @@
 - More nginx controls, add attribute client\_max\_body\_size [\#19](https://github.com/dev-sec/nginx-baseline/pull/19) ([atomic111](https://github.com/atomic111))
 - use recommended spdx license identifier [\#18](https://github.com/dev-sec/nginx-baseline/pull/18) ([chris-rock](https://github.com/chris-rock))
 - Fix deprecation warnings. [\#17](https://github.com/dev-sec/nginx-baseline/pull/17) ([tmclaugh](https://github.com/tmclaugh))
+- readme update, change log & tooling [\#14](https://github.com/dev-sec/nginx-baseline/pull/14) ([chris-rock](https://github.com/chris-rock))
 
 ## [2.0.2](https://github.com/dev-sec/nginx-baseline/tree/2.0.2) (2017-05-08)
 
@@ -67,7 +76,6 @@
 
 **Merged pull requests:**
 
-- readme update, change log & tooling [\#14](https://github.com/dev-sec/nginx-baseline/pull/14) ([chris-rock](https://github.com/chris-rock))
 - fix typo [\#11](https://github.com/dev-sec/nginx-baseline/pull/11) ([rndmh3ro](https://github.com/rndmh3ro))
 
 ## [2.0.0](https://github.com/dev-sec/nginx-baseline/tree/2.0.0) (2016-05-03)
