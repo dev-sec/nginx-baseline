@@ -190,7 +190,7 @@ control 'nginx-07' do
   title 'Control simultaneous connections'
   desc 'NginxHttpLimitZone module to limit the number of simultaneous connections for the assigned session or as a special case, from one IP address.'
   describe parse_config(nginx_parsed_config, options) do
-    its('limit_conn_zone') { should eq '$binary_remote_addr zone=value:10m' }
+    its('limit_conn_zone') { should eq '$binary_remote_addr zone=default:10m' }
   end
   describe parse_config(nginx_parsed_config, options) do
     its('limit_conn') { should eq 'default 5' }
