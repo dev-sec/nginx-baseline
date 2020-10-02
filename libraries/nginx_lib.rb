@@ -30,7 +30,7 @@ class Nginxlib < Inspec.resource(1)
     case inspec.os[:family]
     when 'ubuntu', 'debian'
       web_user
-    when 'redhat', 'centos'
+    when 'redhat', 'centos', 'fedora'
       web_user = centos_user
     end
 
