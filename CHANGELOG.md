@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/dev-sec/nginx-baseline/tree/2.4.0) (2020-11-08)
+
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.4...2.4.0)
+
+**Implemented enhancements:**
+
+- add fedora to valid users library [\#42](https://github.com/dev-sec/nginx-baseline/pull/42) ([rndmh3ro](https://github.com/rndmh3ro))
+
+## [2.3.4](https://github.com/dev-sec/nginx-baseline/tree/2.3.4) (2020-07-23)
+
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.3...2.3.4)
+
 ## [2.3.3](https://github.com/dev-sec/nginx-baseline/tree/2.3.3) (2020-07-13)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.2...2.3.3)
