@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1](https://github.com/dev-sec/nginx-baseline/tree/2.4.1) (2021-01-18)
+
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.0...2.4.1)
+
+**Merged pull requests:**
+
+- softcoded nginx path [\#43](https://github.com/dev-sec/nginx-baseline/pull/43) ([micheelengronne](https://github.com/micheelengronne))
+
 ## [2.4.0](https://github.com/dev-sec/nginx-baseline/tree/2.4.0) (2020-11-08)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.3.4...2.4.0)
@@ -48,7 +56,6 @@
 **Merged pull requests:**
 
 - Bump version to 2.3.0 and switch to inspec 3 for check [\#32](https://github.com/dev-sec/nginx-baseline/pull/32) ([alexpop](https://github.com/alexpop))
-- Templates [\#30](https://github.com/dev-sec/nginx-baseline/pull/30) ([rndmh3ro](https://github.com/rndmh3ro))
 - remove test for hardening.conf file [\#28](https://github.com/dev-sec/nginx-baseline/pull/28) ([rndmh3ro](https://github.com/rndmh3ro))
 - use parse\_config instead of parse\_config\_file [\#27](https://github.com/dev-sec/nginx-baseline/pull/27) ([rndmh3ro](https://github.com/rndmh3ro))
 - Make nginx-14 and nginx-16 disabled by default based on dev-sec/nginx-baseline\#21 [\#26](https://github.com/dev-sec/nginx-baseline/pull/26) ([woneill](https://github.com/woneill))
@@ -82,6 +89,7 @@
 
 **Merged pull requests:**
 
+- Templates [\#30](https://github.com/dev-sec/nginx-baseline/pull/30) ([rndmh3ro](https://github.com/rndmh3ro))
 - update metadata [\#16](https://github.com/dev-sec/nginx-baseline/pull/16) ([chris-rock](https://github.com/chris-rock))
 - restrict ruby testing to version 2.3.3 and update gemfile [\#15](https://github.com/dev-sec/nginx-baseline/pull/15) ([atomic111](https://github.com/atomic111))
 
