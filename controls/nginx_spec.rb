@@ -92,7 +92,7 @@ only_if do
 end
 
 # determine all required paths
-nginx_path          = '/etc/nginx'
+nginx_path          = attribute('nginx_path', value: '/etc/nginx', description: 'Default nginx configurations path')
 nginx_conf          = File.join(nginx_path, 'nginx.conf')
 nginx_confd         = File.join(nginx_path, 'conf.d')
 nginx_enabled       = File.join(nginx_path, 'sites-enabled')
