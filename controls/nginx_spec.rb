@@ -96,7 +96,7 @@ nginx_path          = attribute('nginx_path', value: '/etc/nginx', description: 
 nginx_conf          = File.join(nginx_path, 'nginx.conf')
 nginx_confd         = File.join(nginx_path, 'conf.d')
 nginx_enabled       = File.join(nginx_path, 'sites-enabled')
-nginx_parsed_config = command('nginx -T').stdout
+nginx_parsed_config = attribute('nginx_parsed_config', value: command('nginx -T').stdout, description: 'Default nginx test command')
 
 options = {
   assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
