@@ -4,13 +4,15 @@ AllCops:
   - vendor/**/*
 Documentation:
   Enabled: false
-AlignParameters:
+Layout/ParameterAlignment:
   Enabled: true
 HashSyntax:
   Enabled: true
 LineLength:
   Enabled: false
 EmptyLinesAroundBlockBody:
+  Enabled: false
+Style/Encoding:
   Enabled: false
 MethodLength:
   Max: 40
@@ -24,6 +26,3 @@ Metrics/PerceivedComplexity:
   Max: 10
 Metrics/AbcSize:
   Max: 30
-# Some releases of InSpec have issues with character encoding unless the encoding is declared.
-Style/Encoding:
-  Enabled: false
