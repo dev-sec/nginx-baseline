@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 # Copyright 2015, Patrick Muench
 #
@@ -255,7 +256,7 @@ control 'nginx-14' do
 
   only_if { HTTP_METHODS_CHECK != false }
   describe file(nginx_conf) do
-    its('content') { should match(/^\s*if\s+\(\$request_method\s+\!\~\s+\^\(#{HTTP_METHODS}\)\$\)\{?$/) }
+    its('content') { should match(/^\s*if\s+\(\$request_method\s+!~\s+\^\(#{HTTP_METHODS}\)\$\)\{?$/) }
   end
 end
 
