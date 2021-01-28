@@ -1,11 +1,12 @@
 # Changelog
 
-## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-01-26)
+## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-01-28)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.4.2)
 
 **Merged pull requests:**
 
+- Fix lint [\#46](https://github.com/dev-sec/nginx-baseline/pull/46) ([schurzi](https://github.com/schurzi))
 - GitHub action [\#45](https://github.com/dev-sec/nginx-baseline/pull/45) ([rndmh3ro](https://github.com/rndmh3ro))
 
 ## [2.4.1](https://github.com/dev-sec/nginx-baseline/tree/2.4.1) (2021-01-18)
