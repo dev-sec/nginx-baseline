@@ -1,11 +1,12 @@
 # Changelog
 
-## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-01-28)
+## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-02-02)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.4.2)
 
 **Merged pull requests:**
 
+- use version tag for changelog action [\#47](https://github.com/dev-sec/nginx-baseline/pull/47) ([schurzi](https://github.com/schurzi))
 - Fix lint [\#46](https://github.com/dev-sec/nginx-baseline/pull/46) ([schurzi](https://github.com/schurzi))
 - GitHub action [\#45](https://github.com/dev-sec/nginx-baseline/pull/45) ([rndmh3ro](https://github.com/rndmh3ro))
 
@@ -92,6 +93,7 @@
 - More nginx controls, add attribute client\_max\_body\_size [\#19](https://github.com/dev-sec/nginx-baseline/pull/19) ([atomic111](https://github.com/atomic111))
 - use recommended spdx license identifier [\#18](https://github.com/dev-sec/nginx-baseline/pull/18) ([chris-rock](https://github.com/chris-rock))
 - Fix deprecation warnings. [\#17](https://github.com/dev-sec/nginx-baseline/pull/17) ([tmclaugh](https://github.com/tmclaugh))
+- restrict ruby testing to version 2.3.3 and update gemfile [\#15](https://github.com/dev-sec/nginx-baseline/pull/15) ([atomic111](https://github.com/atomic111))
 
 ## [2.0.2](https://github.com/dev-sec/nginx-baseline/tree/2.0.2) (2017-05-08)
 
@@ -100,7 +102,6 @@
 **Merged pull requests:**
 
 - update metadata [\#16](https://github.com/dev-sec/nginx-baseline/pull/16) ([chris-rock](https://github.com/chris-rock))
-- restrict ruby testing to version 2.3.3 and update gemfile [\#15](https://github.com/dev-sec/nginx-baseline/pull/15) ([atomic111](https://github.com/atomic111))
 
 ## [2.0.1](https://github.com/dev-sec/nginx-baseline/tree/2.0.1) (2016-12-22)
 
