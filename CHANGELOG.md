@@ -1,11 +1,12 @@
 # Changelog
 
-## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-03-22)
+## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-04-24)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.4.2)
 
 **Merged pull requests:**
 
+- fix rubocop error for Rakefile [\#49](https://github.com/dev-sec/nginx-baseline/pull/49) ([schurzi](https://github.com/schurzi))
 - add dependency to chef-config for CI [\#48](https://github.com/dev-sec/nginx-baseline/pull/48) ([schurzi](https://github.com/schurzi))
 - use version tag for changelog action [\#47](https://github.com/dev-sec/nginx-baseline/pull/47) ([schurzi](https://github.com/schurzi))
 - Fix lint [\#46](https://github.com/dev-sec/nginx-baseline/pull/46) ([schurzi](https://github.com/schurzi))
@@ -103,7 +104,6 @@
 
 - update metadata [\#16](https://github.com/dev-sec/nginx-baseline/pull/16) ([chris-rock](https://github.com/chris-rock))
 - restrict ruby testing to version 2.3.3 and update gemfile [\#15](https://github.com/dev-sec/nginx-baseline/pull/15) ([atomic111](https://github.com/atomic111))
-- update urls [\#9](https://github.com/dev-sec/nginx-baseline/pull/9) ([chris-rock](https://github.com/chris-rock))
 
 ## [2.0.1](https://github.com/dev-sec/nginx-baseline/tree/2.0.1) (2016-12-22)
 
