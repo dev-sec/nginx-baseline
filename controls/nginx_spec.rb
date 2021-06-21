@@ -1,7 +1,6 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
-# Copyright 2015, Patrick Muench
+# Copyright:: 2015, Patrick Muench
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,67 +21,67 @@
 title 'NGINX server config'
 
 # attributes
-CLIENT_MAX_BODY_SIZE = attribute(
+CLIENT_MAX_BODY_SIZE = input(
   'client_max_body_size',
   description: 'Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting size to 0 disables checking of client request body size.',
   value: '1k'
 )
 
-CLIENT_BODY_BUFFER_SIZE = attribute(
+CLIENT_BODY_BUFFER_SIZE = input(
   'client_body_buffer_size',
   description: 'Sets buffer size for reading client request body. In case the request body is larger than the buffer, the whole body or only its part is written to a temporary file. By default, buffer size is equal to two memory pages. This is 8K on x86, other 32-bit platforms, and x86-64. It is usually 16K on other 64-bit platforms.',
   value: '1k'
 )
 
-CLIENT_HEADER_BUFFER_SIZE = attribute(
+CLIENT_HEADER_BUFFER_SIZE = input(
   'client_header_buffer_size',
   description: 'Sets buffer size for reading client request header. For most requests, a buffer of 1K bytes is enough. However, if a request includes long cookies, or comes from a WAP client, it may not fit into 1K. If a request line or a request header field does not fit into this buffer then larger buffers, configured by the large_client_header_buffers directive, are allocated.',
   value: '1k'
 )
 
-LARGE_CLIENT_HEADER_BUFFER = attribute(
+LARGE_CLIENT_HEADER_BUFFER = input(
   'large_client_header_buffers',
   description: 'Sets the maximum number and size of buffers used for reading large client request header. A request line cannot exceed the size of one buffer, or the 414 (Request-URI Too Large) error is returned to the client. A request header field cannot exceed the size of one buffer as well, or the 400 (Bad Request) error is returned to the client. Buffers are allocated only on demand. By default, the buffer size is equal to 8K bytes. If after the end of request processing a connection is transitioned into the keep-alive state, these buffers are released.',
   value: '2 1k'
 )
 
-KEEPALIVE_TIMEOUT = attribute(
+KEEPALIVE_TIMEOUT = input(
   'keepalive_timeout',
   description: 'The first parameter sets a timeout during which a keep-alive client connection will stay open on the server side. The zero value disables keep-alive client connections. The optional second parameter sets a value in the “Keep-Alive: timeout=time” response header field. Two parameters may differ.',
   value: '5 5'
 )
 
-CLIENT_BODY_TIMEOUT = attribute(
+CLIENT_BODY_TIMEOUT = input(
   'client_body_timeout',
   description: 'Defines a timeout for reading client request body. The timeout is set only for a period between two successive read operations, not for the transmission of the whole request body. If a client does not transmit anything within this time, the 408 (Request Time-out) error is returned to the client.',
   value: '10'
 )
 
-CLIENT_HEADER_TIMEOUT = attribute(
+CLIENT_HEADER_TIMEOUT = input(
   'client_header_timeout',
   description: 'Defines a timeout for reading client request header. If a client does not transmit the entire header within this time, the 408 (Request Time-out) error is returned to the client.',
   value: '10'
 )
 
-SEND_TIMEOUT = attribute(
+SEND_TIMEOUT = input(
   'send_timeout',
   description: 'Sets a timeout for transmitting a response to the client. The timeout is set only between two successive write operations, not for the transmission of the whole response. If the client does not receive anything within this time, the connection is closed.',
   value: '10'
 )
 
-HTTP_METHODS = attribute(
+HTTP_METHODS = input(
   'http_methods',
   description: 'Specify the used HTTP methods',
   value: 'GET\|HEAD\|POST'
 )
 
-HTTP_METHODS_CHECK = attribute(
+HTTP_METHODS_CHECK = input(
   'http_methods_check',
   description: 'Defines if http_methods should be checked in the nginx configuration',
   value: false
 )
 
-NGINX_COOKIE_FLAG_MODULE = attribute(
+NGINX_COOKIE_FLAG_MODULE = input(
   'nginx_cookie_flag_module',
   description: 'Defines if nginx has been compiled with nginx_cookie_flag_module',
   value: false
@@ -93,19 +92,19 @@ only_if do
 end
 
 # determine all required paths
-nginx_path          = attribute('nginx_path', value: '/etc/nginx', description: 'Default nginx configurations path')
+nginx_path          = input('nginx_path', value: '/etc/nginx', description: 'Default nginx configurations path')
 nginx_conf          = File.join(nginx_path, 'nginx.conf')
 nginx_confd         = File.join(nginx_path, 'conf.d')
 nginx_enabled       = File.join(nginx_path, 'sites-enabled')
 nginx_parsed_config = command('nginx -T').stdout
 
 options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
 }
 
 options_add_header = {
   assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
+  multiple_values: true,
 }
 
 control 'nginx-01' do
