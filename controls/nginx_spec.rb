@@ -231,7 +231,7 @@ control 'nginx-12' do
   desc 'When choosing a cipher during an SSLv3 or TLSv1 handshake, normally the client\'s preference is used. If this directive is enabled, the server\'s preference will be used instead.'
   ref 'SSL Hardening config', url: 'https://mozilla.github.io/server-side-tls/ssl-config-generator/'
   describe parse_config(nginx_parsed_config, options) do
-    its('ssl_protocols') { should eq 'TLSv1.2' }
+    its('ssl_protocols') { should be_in ['TLSv1.3', 'TLSv1.2', 'TLSv1.2 TLSv1.3', 'TLSv1.3 TLSv1.2'] }
     its('ssl_session_tickets') { should eq 'off' }
     its('ssl_ciphers') { should eq '\'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256\'' }
     its('ssl_prefer_server_ciphers') { should eq 'on' }
