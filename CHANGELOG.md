@@ -1,8 +1,12 @@
 # Changelog
 
-## [2.4.2](https://github.com/dev-sec/nginx-baseline/tree/2.4.2) (2021-04-24)
+## [2.5.0](https://github.com/dev-sec/nginx-baseline/tree/2.5.0) (2021-08-31)
 
-[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.4.2)
+[Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.5.0)
+
+**Implemented enhancements:**
+
+- add support for tls1.3 protocol [\#51](https://github.com/dev-sec/nginx-baseline/pull/51) ([rndmh3ro](https://github.com/rndmh3ro))
 
 **Merged pull requests:**
 
