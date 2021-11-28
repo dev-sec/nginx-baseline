@@ -235,7 +235,7 @@ control 'nginx-12' do
     its('ssl_session_tickets') { should eq 'off' }
     its('ssl_ciphers') { should eq '\'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256\'' }
     its('ssl_prefer_server_ciphers') { should eq 'on' }
-    its('ssl_dhparam') { should eq '/etc/nginx/dh2048.pem' }
+    its('ssl_dhparam') { should eq '/etc/nginx/dh4096.pem' }
   end
 end
 
