@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.5.0](https://github.com/dev-sec/nginx-baseline/tree/2.5.0) (2021-08-31)
+## [2.5.0](https://github.com/dev-sec/nginx-baseline/tree/2.5.0) (2021-11-28)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.4.1...2.5.0)
 
@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- update dhparams to 4096 [\#52](https://github.com/dev-sec/nginx-baseline/pull/52) ([rndmh3ro](https://github.com/rndmh3ro))
 - fix rubocop error for Rakefile [\#49](https://github.com/dev-sec/nginx-baseline/pull/49) ([schurzi](https://github.com/schurzi))
 - add dependency to chef-config for CI [\#48](https://github.com/dev-sec/nginx-baseline/pull/48) ([schurzi](https://github.com/schurzi))
 - use version tag for changelog action [\#47](https://github.com/dev-sec/nginx-baseline/pull/47) ([schurzi](https://github.com/schurzi))
