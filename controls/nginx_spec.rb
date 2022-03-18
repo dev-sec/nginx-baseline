@@ -1,7 +1,6 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
-# Copyright 2015, Patrick Muench
+# Copyright:: 2015, Patrick Muench
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -100,12 +99,12 @@ nginx_enabled       = File.join(nginx_path, 'sites-enabled')
 nginx_parsed_config = command('nginx -T').stdout
 
 options = {
-  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/
+  assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
 }
 
 options_add_header = {
   assignment_regex: /^\s*([^:]*?)\s*\ \s*(.*?)\s*;$/,
-  multiple_values: true
+  multiple_values: true,
 }
 
 control 'nginx-01' do
