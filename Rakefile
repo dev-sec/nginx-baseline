@@ -1,6 +1,7 @@
 #!/usr/bin/env rake
 # frozen_string_literal: true
 
+require 'cookstyle'
 require 'rake/testtask'
 require 'rubocop/rake_task'
 
@@ -8,6 +9,10 @@ require 'rubocop/rake_task'
 desc 'Run Rubocop lint checks'
 task :rubocop do
   RuboCop::RakeTask.new
+end
+
+RuboCop::RakeTask.new(:cookstyle) do |task|
+  task.options << '--display-cop-names'
 end
 
 # lint the project
