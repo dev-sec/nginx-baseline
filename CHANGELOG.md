@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2022-03-18)
+## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2022-09-29)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.5.0...2.5.1)
 
