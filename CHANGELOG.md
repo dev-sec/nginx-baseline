@@ -1,8 +1,12 @@
 # Changelog
 
-## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2022-09-29)
+## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2022-12-05)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.5.0...2.5.1)
+
+**Implemented enhancements:**
+
+- use centralised issue templates and workflows [\#55](https://github.com/dev-sec/nginx-baseline/pull/55) ([schurzi](https://github.com/schurzi))
 
 **Merged pull requests:**
 
