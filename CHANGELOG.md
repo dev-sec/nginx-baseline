@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2022-12-05)
+## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2023-03-31)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.5.0...2.5.1)
 
@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- Configure Renovate [\#56](https://github.com/dev-sec/nginx-baseline/pull/56) ([renovate[bot]](https://github.com/apps/renovate))
 - Change linting to Cookstyle [\#54](https://github.com/dev-sec/nginx-baseline/pull/54) ([schurzi](https://github.com/schurzi))
 
 ## [2.5.0](https://github.com/dev-sec/nginx-baseline/tree/2.5.0) (2022-01-12)
