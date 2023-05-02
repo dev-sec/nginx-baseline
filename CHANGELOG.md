@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2023-03-31)
+## [2.5.1](https://github.com/dev-sec/nginx-baseline/tree/2.5.1) (2023-05-02)
 
 [Full Changelog](https://github.com/dev-sec/nginx-baseline/compare/2.5.0...2.5.1)
 
@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- add spellchecking with codespell [\#57](https://github.com/dev-sec/nginx-baseline/pull/57) ([schurzi](https://github.com/schurzi))
 - Configure Renovate [\#56](https://github.com/dev-sec/nginx-baseline/pull/56) ([renovate[bot]](https://github.com/apps/renovate))
 - Change linting to Cookstyle [\#54](https://github.com/dev-sec/nginx-baseline/pull/54) ([schurzi](https://github.com/schurzi))
 
